@@ -1,0 +1,71 @@
+{
+    "address": "A695ef3115729A77Ad11c51Eb4D095E270A23759",
+    "abi": [
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "_type",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "_object",
+                    "type": "string"
+                }
+            ],
+            "name": "sdpEmit",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "_type",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_object",
+                    "type": "string"
+                }
+            ],
+            "name": "sdpEmiter",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "peerData",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "userAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "stackAmount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "peerId",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}
