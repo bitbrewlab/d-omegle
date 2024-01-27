@@ -4,13 +4,13 @@ var cors = require('cors')
 const socketIO = require('socket.io');
 
 const app = express();
-app.use(cors())
+app.use(cors());
+
 const server = http.createServer(app);
 const io = socketIO(server, {
     path: '/webrtc',
     cors: {
         origins: "http://localhost:5173/",
-
     }
 });
 

@@ -2,8 +2,8 @@ import { useAccount } from "wagmi";
 
 export default function Navbar() {
   const navigation = [
-    { title: "Report", path: "javascript:void(0)" },
-    { title: "Help", path: "javascript:void(0)" },
+    { title: "Report", path: "#" },
+    { title: "Help", path: "#" },
   ];
 
   const account = useAccount();
@@ -12,7 +12,7 @@ export default function Navbar() {
     <nav className="bg-white w-full border-b md:border-0 md:static">
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
-          <a href="javascript:void(0)">
+          <a href="#">
             <h1 className="text-xl font-extrabold">D-Omegle</h1>
           </a>
         </div>
