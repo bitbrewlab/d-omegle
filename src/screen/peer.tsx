@@ -2,15 +2,17 @@ import { useEffect, useRef } from "react";
 import { peerConnection } from "../service/peer.conf";
 import Navbar from "../component/navbar";
 
-import { useAccount, useWriteContract, useDisconnect } from "wagmi";
-import metadata from "../service/contract/metadata.json";
+import { useAccount, useDisconnect } from "wagmi";
+
+import { io } from "socket.io-client";
+
+const socket = io("ws://localhost:8080/");
 
 export default function Peer() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   let localStream: MediaStream;
 
-  const { writeContract } = useWriteContract();
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
@@ -22,6 +24,14 @@ export default function Peer() {
   useEffect(() => {
     document.title = `${account.address}`;
     createOffer();
+
+    socket.on("connect", () => {
+      console.log("socket connected");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("socket disconnected");
+    });
   }, []);
 
   const createOffer = async () => {
@@ -45,26 +55,21 @@ export default function Peer() {
     // ICE candidate
     peerConnection.onicecandidate = async (event) => {
       if (event.candidate) {
-        console.log("New ICE candidate. ", event.candidate);
+        socket.emit("candidate", event.candidate);
       }
     };
 
     // offer creation & set as local description
-    const offer = await peerConnection.createOffer();
-    peerConnection.setLocalDescription(offer);
-    // await sdpUploader("offer", JSON.stringify(offer));
-    console.log(peerConnection);
+    peerConnection
+      .createOffer()
+      .then((offer) => {
+        peerConnection.setLocalDescription(offer);
+        socket.emit("sdp", offer);
+      })
+      .catch((err) => console.log("error ", err));
   };
 
-  const sdpUploader = async (type: string, sdp: string) => {
-    console.log("sdpUploader", type, sdp);
-    writeContract({
-      address: `0x${metadata.address}`,
-      abi: metadata.abi,
-      functionName: "sdpEmiter",
-      args: [type, sdp],
-    });
-  };
+  const createAnswer = async () => {};
 
   return (
     <div className="relative h-screen">
