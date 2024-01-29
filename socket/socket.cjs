@@ -2,6 +2,12 @@ const express = require('express');
 const http = require('http');
 var cors = require('cors')
 
+<<<<<<< HEAD
+=======
+const { MainAlgo, User } = require("./algo");
+const mainAlgoInstance = new MainAlgo();
+
+>>>>>>> 550a1ba (matching algorithm addded)
 const { Server } = require("socket.io");
 
 
@@ -72,4 +78,29 @@ io.on('connection', (socket) => {
 
 server.listen(port, () => {
     console.log(`Server is up on port ${port}`);
+<<<<<<< HEAD
+=======
+
+    const user1 = new User("1", "1");
+    const user2 = new User("2", "2");
+    const user3 = new User("3", "3");
+    const user4 = new User("4", "4");
+    const user5 = new User("5", "5");
+    const user6 = new User("6", "6");
+    // const user7 = new User("7", "7");
+
+    mainAlgoInstance.admitUser(user1);
+    mainAlgoInstance.admitUser(user2);
+    mainAlgoInstance.admitUser(user3);
+    mainAlgoInstance.admitUser(user4);
+    mainAlgoInstance.admitUser(user5);
+    mainAlgoInstance.admitUser(user6);
+    // mainAlgoInstance.admitUser(user7);
+
+    mainAlgoInstance.matchUser();
+    mainAlgoInstance.matchUser();
+    mainAlgoInstance.matchUser();
+    mainAlgoInstance.matchUser();
+    mainAlgoInstance.matchUser();
+>>>>>>> 550a1ba (matching algorithm addded)
 });
