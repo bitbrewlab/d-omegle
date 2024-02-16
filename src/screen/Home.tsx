@@ -1,6 +1,5 @@
 import { polygonMumbai } from "wagmi/chains";
 import { useEffect } from "react";
-
 import { useAccount, useConnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
 
@@ -18,12 +17,12 @@ export default function Home() {
   };
 
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gray-50 heroBackground">
       <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
-        <div className="mx-auto max-w-xl text-center">
+        <div className="mx-auto text-center bg-white px-12 py-5 rounded-2xl border-2 border-black">
           <h1 className="text-3xl font-extrabold sm:text-5xl">
             😂 Welcome to Domegle.
-            <strong className="font-extrabold text-blue-700 sm:block">
+            <strong className="font-extrabold text-[#4d648d] sm:block">
               peer-to-peer video chat.
             </strong>
           </h1>
@@ -35,7 +34,7 @@ export default function Home() {
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <button
-              className="block w-full rounded bg-blue-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
+              className="block w-full rounded bg-[#0F1C2E] px-12 py-3 text-sm font-medium text-white shadow hover:bg-[#374357] focus:outline-none focus:ring active:bg-[#1f2b3e] sm:w-auto"
               onClick={() =>
                 connect({
                   connector: injected(),
@@ -52,7 +51,7 @@ export default function Home() {
 
             {account !== null ? (
               <button
-                className="block w-full rounded px-12 py-3 text-sm font-medium text-blue-600 shadow hover:text-blue-700 focus:outline-none focus:ring active:text-blue-500 sm:w-auto"
+                className="block w-full rounded px-12 py-3 text-sm font-medium text-[#0F1C2E] shadow hover:text-[#374357] focus:outline-none focus:ring active:text-[#1f2b3e] sm:w-auto"
                 onClick={checkStack}
               >
                 Confirm Stack
@@ -66,8 +65,8 @@ export default function Home() {
             <div
               className={`rounded  border m-5 ${
                 account.address
-                  ? "bg-green-100 text-green-800 border-green-300 "
-                  : "bg-red-100 text-red-800 border-red-300"
+                  ? "bg-green-100 text-[#0D6E6E] border-[#0D6E6E] "
+                  : "bg-red-100 text-[#c21d03] border-[#c21d03]"
               } text-xs font-medium mr-2 px-2.5 py-0.5`}
             >
               1. Wallet Connection
@@ -76,8 +75,8 @@ export default function Home() {
             <button
               className={`rounded  border m-5 ${
                 account.chainId === polygonMumbai.id
-                  ? "bg-green-100 text-green-800 border-green-300 "
-                  : "bg-red-100 text-red-800 border-red-300"
+                  ? "bg-green-100 text-[#0D6E6E] border-[#0D6E6E] "
+                  : "bg-red-100 text-[#c21d03] border-[#c21d03]"
               } text-xs font-medium mr-2 px-2.5 py-0.5`}
               onClick={async () =>
                 await switchChain({
@@ -91,8 +90,8 @@ export default function Home() {
             <div
               className={`rounded  border m-5 ${
                 false
-                  ? "bg-green-100 text-green-800 border-green-300 "
-                  : "bg-red-100 text-red-800 border-red-300"
+                  ? "bg-green-100 text-[#0D6E6E] border-[#0D6E6E] "
+                  : "bg-red-100 text-[#c21d03] border-[#c21d03]"
               } text-xs font-medium mr-2 px-2.5 py-0.5`}
             >
               3. Stack Etheres

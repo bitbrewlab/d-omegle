@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.heroBackground {
+    background-image: url("./assets/hero_background.svg");
+    background-position: center;
+    background-size: cover;
+}
