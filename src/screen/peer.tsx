@@ -1,17 +1,19 @@
 import { useEffect, useRef } from "react";
-import { peerConnection } from "../service/peer.conf";
+import { getMedia, peerConnection } from "../service/peer.conf";
 import Navbar from "../component/navbar";
 
 import { useAccount, useDisconnect } from "wagmi";
 
 import { io } from "socket.io-client";
 
-const socket = io("ws://localhost:8080/");
+const socket = io("http://localhost:8080/");
 
 export default function Peer() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
+
   let localStream: MediaStream;
+  let remoteStream: MediaStream;
 
   const { disconnect } = useDisconnect();
   const account = useAccount();
@@ -23,7 +25,7 @@ export default function Peer() {
 
   useEffect(() => {
     document.title = `${account.address}`;
-    createOffer();
+    initUser();
 
     socket.on("connect", () => {
       console.log("socket connected");
@@ -34,52 +36,38 @@ export default function Peer() {
     });
   }, []);
 
-  const createOffer = async () => {
-    localStream = await getUserMedia(constraints);
+  const initUser = async () => {
+    localStream = await getMedia(constraints);
     localVideoRef.current!.srcObject = localStream;
 
     localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream);
     });
 
-    const remoteMediaStream = new MediaStream();
-    remoteVideoRef.current!.srcObject = remoteMediaStream;
+    socket.emit("admitUser", { userAddress: account.address });
 
-    // Understand track concept in webrtc
-    peerConnection.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
-        remoteMediaStream.addTrack(track);
-      });
-    };
-
-    // ICE candidate
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        socket.emit("candidate", event.candidate);
-      }
-    };
-
-    // offer creation & set as local description
-    peerConnection
-      .createOffer()
-      .then((offer) => {
-        peerConnection.setLocalDescription(offer);
-        socket.emit("sdp", offer);
-      })
-      .catch((err) => console.log("error ", err));
+    createOffer();
   };
 
-  const createAnswer = async () => {};
+  const createOffer = async () => {
+    const offer = await peerConnection.createOffer();
+    peerConnection.setLocalDescription(offer);
+    socket.emit("offer", {
+      offer: offer,
+      userAddress: account.address,
+    });
+    peerConnection.addEventListener("icecandidate", (event) => {});
+  };
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen ">
       <div className="absolute inset-x-0 top-0">
         <Navbar />
       </div>
       <div className="absolute inset-0">
         <div className="flex items-center justify-center gap-4 h-full">
           <video
-            className="w-96 h-72 shadow-lg rounded-2xl saturate-150"
+            className="w-96 h-72  shadow-lg  rounded-2xl saturate-150"
             ref={localVideoRef}
             autoPlay
             muted
@@ -93,24 +81,18 @@ export default function Peer() {
           />
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 w-screen text-slate-400 p-5 text-center">
+      <div className="absolute inset-x-0 bottom-0 w-screen  p-5 text-center">
         <h1>@ Develop In BitsBrewLab with ❤️</h1>
       </div>
 
       <div className="absolute inset-y-100 right-5 bottom-5 ">
         <button
           className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg "
-          onClick={async () => {
-            disconnect();
-          }}
+          onClick={() => disconnect()}
         >
           Disconnect
         </button>
       </div>
     </div>
   );
-}
-
-async function getUserMedia(constraints: { video: boolean; audio: boolean }) {
-  return await navigator.mediaDevices.getUserMedia(constraints);
 }

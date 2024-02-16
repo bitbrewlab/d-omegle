@@ -4,6 +4,9 @@ class User {
         this.address = _address;
         this.available = true;
         this.roomId = null;
+        this.offer = null;
+        this.answer = null;
+        this.ICEcandidate = [];
     }
 }
 
@@ -18,10 +21,20 @@ class Room {
 class MainAlgo {
     constructor() {
         this.users = [];
+        this.userObj = new Map();
     }
 
     admitUser(_user) {
-        this.users.push(_user);
+        this.users.push(_user.address);
+        this.userObj.set(_user.address, _user);
+    }
+
+    setOffer(_object) {
+        this.userObj.get(_object.userAddress).offer = _object.offer;
+    }
+
+    setAnswer(_data, _userId) {
+
     }
 
     generateRandomId() {
