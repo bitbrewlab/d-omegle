@@ -1,12 +1,9 @@
 import { useEffect, useRef } from "react";
 import { getMedia, peerConnection } from "../service/peer.conf";
 import Navbar from "../component/navbar";
-
 import { useAccount, useDisconnect } from "wagmi";
 
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8080/");
 
 export default function Peer() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -18,6 +15,10 @@ export default function Peer() {
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
+  const socket = io("http://localhost:8080/", {
+    auth: { userName: account.address },
+  });
+
   const constraints = {
     video: true,
     audio: false,
@@ -27,13 +28,24 @@ export default function Peer() {
     document.title = `${account.address}`;
     initUser();
 
-    socket.on("connect", () => {
-      console.log("socket connected");
-    });
+    // Define event handlers
+    const onConnect = () => console.log("socket connected");
+    const onNewOffer = (users: any) => console.log("watingPool", users);
+    const onIceCandidateAdded = (users: any) => console.log("offer", users);
+    const onDisconnect = () => console.log("socket disconnected");
 
-    socket.on("disconnect", () => {
-      console.log("socket disconnected");
-    });
+    // Subscribe to socket events
+    socket.on("connect", onConnect);
+    socket.on("newUser", (users) => onNewOffer(users));
+    socket.on("addIceCandidate", (users) => onIceCandidateAdded(users));
+    socket.on("disconnect", onDisconnect);
+
+    // Cleanup function to unsubscribe from events when component unmounts
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("newOffers", onNewOffer);
+      socket.off("disconnect", onDisconnect);
+    };
   }, []);
 
   const initUser = async () => {
@@ -43,20 +55,25 @@ export default function Peer() {
     localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream);
     });
-
-    socket.emit("admitUser", { userAddress: account.address });
-
     createOffer();
   };
 
   const createOffer = async () => {
     const offer = await peerConnection.createOffer();
     peerConnection.setLocalDescription(offer);
-    socket.emit("offer", {
-      offer: offer,
+
+    socket.emit("admitUser", {
       userAddress: account.address,
+      offer: offer,
     });
-    peerConnection.addEventListener("icecandidate", (event) => {});
+    peerConnection.addEventListener("icecandidate", (event) => {
+      if (event.candidate) {
+        socket.emit("addIceCandidate", {
+          userAddress: account.address,
+          candidate: event.candidate,
+        });
+      }
+    });
   };
 
   return (
