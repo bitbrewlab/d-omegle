@@ -43,6 +43,11 @@ io.on('connection', (socket) => {
         mainAlgoInstance.admitUser(user);
         socket.broadcast.emit('newUser', user)
     });
+
+    socket.on("addIceCandidate", data => {
+        mainAlgoInstance.setIceCandidate(data);
+        socket.broadcast.emit("addIceCandidate", mainAlgoInstance.userObj.get(data.userAddress));
+    });
 });
 
 server.listen(port, () => {

@@ -26,14 +26,11 @@ class MainAlgo {
 
     admitUser(_user) {
         this.userObj.set(_user.address, _user);
-    }
-
-    setOffer(_object) {
-        // 
+        this.matchUser();
     }
 
     setIceCandidate(_data) {
-        // this.userObj.get(_data.userAddress).ICEcandidate.push(_data.candidate);
+        this.userObj.get(_data.userAddress).ICEcandidate.push(_data.candidate);
     }
 
     setAnswer(_data, _userId) {
@@ -61,7 +58,7 @@ class MainAlgo {
     matchUser() {
         const maxRetries = 10;
 
-        if (this.users.length >= 2) {
+        if (this.connectSocket.length >= 2) {
             for (let retry = 0; retry < maxRetries; retry++) {
                 const user1id = this.generateRandomId();
                 const user2id = this.generateRandomId();
@@ -88,4 +85,4 @@ class MainAlgo {
     }
 }
 
-module.exports = { User, MainAlgo, RoomObject };
+module.exports = { User, MainAlgo };

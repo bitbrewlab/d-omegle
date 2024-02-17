@@ -31,11 +31,13 @@ export default function Peer() {
     // Define event handlers
     const onConnect = () => console.log("socket connected");
     const onNewOffer = (users: any) => console.log("watingPool", users);
+    const onIceCandidateAdded = (users: any) => console.log("offer", users);
     const onDisconnect = () => console.log("socket disconnected");
 
     // Subscribe to socket events
     socket.on("connect", onConnect);
     socket.on("newUser", (users) => onNewOffer(users));
+    socket.on("addIceCandidate", (users) => onIceCandidateAdded(users));
     socket.on("disconnect", onDisconnect);
 
     // Cleanup function to unsubscribe from events when component unmounts
@@ -60,14 +62,15 @@ export default function Peer() {
     const offer = await peerConnection.createOffer();
     peerConnection.setLocalDescription(offer);
 
-    socket.emit("admitUser", { userAddress: account.address, offer: offer });
-
+    socket.emit("admitUser", {
+      userAddress: account.address,
+      offer: offer,
+    });
     peerConnection.addEventListener("icecandidate", (event) => {
-      console.log("... icecandidate ...");
       if (event.candidate) {
         socket.emit("addIceCandidate", {
-          candidate: event.candidate,
           userAddress: account.address,
+          candidate: event.candidate,
         });
       }
     });
