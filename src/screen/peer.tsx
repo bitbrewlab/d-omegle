@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getMedia, peerConnection } from "../service/peer.conf";
 import Navbar from "../component/navbar";
 import { useAccount, useDisconnect } from "wagmi";
@@ -15,6 +15,8 @@ export default function Peer() {
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
+  const [newPeer, setNewPeer] = useState<any[]>([]);
+
   const socket = io("http://localhost:8080/", {
     auth: { userName: account.address },
   });
@@ -28,19 +30,18 @@ export default function Peer() {
     document.title = `${account.address}`;
     initUser();
 
-    // Define event handlers
     const onConnect = () => console.log("socket connected");
-    const onNewOffer = (users: any) => console.log("watingPool", users);
-    const onIceCandidateAdded = (users: any) => console.log("offer", users);
+    const onNewOffer = (users: any) => {
+      setNewPeer([...users]);
+    };
+    // const onIceCandidateAdded = (users: any) => console.log("offer", users);
     const onDisconnect = () => console.log("socket disconnected");
 
-    // Subscribe to socket events
     socket.on("connect", onConnect);
     socket.on("newUser", (users) => onNewOffer(users));
-    socket.on("addIceCandidate", (users) => onIceCandidateAdded(users));
+    // socket.on("addIceCandidate", (users) => onIceCandidateAdded(users));
     socket.on("disconnect", onDisconnect);
 
-    // Cleanup function to unsubscribe from events when component unmounts
     return () => {
       socket.off("connect", onConnect);
       socket.off("newOffers", onNewOffer);
@@ -76,11 +77,26 @@ export default function Peer() {
     });
   };
 
+  const createAnswer = async (offer: RTCSessionDescriptionInit) => {
+    console.log("peer", offer);
+  };
+
   return (
     <div className="relative h-screen ">
       <div className="absolute inset-x-0 top-0">
         <Navbar />
       </div>
+
+      <div className="absolute inset-x-5 top-12 gap-5">
+        {newPeer.map((peer, index) => (
+          <div key={index}>
+            <button className="bg-sky-700 text-white rounded-lg p-3 text-xs">
+              {peer.address.slice(0, 8) + "..." + peer.address.slice(-4)}
+            </button>
+          </div>
+        ))}
+      </div>
+
       <div className="absolute inset-0">
         <div className="flex items-center justify-center gap-4 h-full">
           <video

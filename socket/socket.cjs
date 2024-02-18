@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
         if (offer) {
             offer.ICEcandidate.push(data.candidate);
         }
-        socket.broadcast.emit("addIceCandidate", offer);
+        // socket.broadcast.emit("addIceCandidate", offer);
     });
 });
 
