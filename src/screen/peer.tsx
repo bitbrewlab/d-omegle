@@ -33,6 +33,8 @@ export default function Peer() {
     const onConnect = () => console.log("socket connected");
     const onNewOffer = (users: any) => {
       setNewPeer([...users]);
+      peerConnection.setRemoteDescription(users[0].offer);
+      createAnswer();
     };
     // const onIceCandidateAdded = (users: any) => console.log("offer", users);
     const onDisconnect = () => console.log("socket disconnected");
@@ -67,19 +69,26 @@ export default function Peer() {
       userAddress: account.address,
       offer: offer,
     });
+
+    IceCandidate();
+  };
+
+  const createAnswer = async () => {
+    const answer = await peerConnection.createAnswer();
+    peerConnection.setLocalDescription(answer);
+    console.log("answer", answer);
+  };
+
+  const IceCandidate = () =>
     peerConnection.addEventListener("icecandidate", (event) => {
       if (event.candidate) {
+        console.log(event.candidate);
         socket.emit("addIceCandidate", {
           userAddress: account.address,
           candidate: event.candidate,
         });
       }
     });
-  };
-
-  const createAnswer = async (offer: RTCSessionDescriptionInit) => {
-    console.log("peer", offer);
-  };
 
   return (
     <div className="relative h-screen ">
@@ -90,8 +99,11 @@ export default function Peer() {
       <div className="absolute inset-x-5 top-12 gap-5">
         {newPeer.map((peer, index) => (
           <div key={index}>
-            <button className="bg-sky-700 text-white rounded-lg p-3 text-xs">
-              {peer.address.slice(0, 8) + "..." + peer.address.slice(-4)}
+            <button
+              className="bg-sky-700 text-white rounded-lg p-3 text-xs"
+              onClick={() => createAnswer()}
+            >
+              {peer.address.slice(0, 4) + "..." + peer.address.slice(-4)}
             </button>
           </div>
         ))}
