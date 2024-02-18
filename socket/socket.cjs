@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 var cors = require('cors')
 
-const { MainAlgo, User, RoomObject } = require("./algo");
+const { MainAlgo, User } = require("./algo");
 const mainAlgoInstance = new MainAlgo();
 
 const { Server } = require("socket.io");
@@ -40,13 +40,16 @@ io.on('connection', (socket) => {
 
     socket.on('admitUser', data => {
         var user = new User(socket.id, data.userAddress, data.offer);
-        mainAlgoInstance.admitUser(user);
-        socket.broadcast.emit('newUser', user)
+        mainAlgoInstance.users.push(user);
+        socket.broadcast.emit('newUser', mainAlgoInstance.users.slice(-1))
     });
 
     socket.on("addIceCandidate", data => {
-        mainAlgoInstance.setIceCandidate(data);
-        socket.broadcast.emit("addIceCandidate", mainAlgoInstance.userObj.get(data.userAddress));
+        let offer = mainAlgoInstance.users.find(user => user.address == data.userAddress);
+        if (offer) {
+            offer.ICEcandidate.push(data.candidate);
+        }
+        // socket.broadcast.emit("addIceCandidate", offer);
     });
 });
 

@@ -21,16 +21,12 @@ class MainAlgo {
     constructor() {
         this.users = [];
         this.connectSocket = [];
-        this.userObj = new Map();
     }
 
     admitUser(_user) {
-        this.userObj.set(_user.address, _user);
-        this.matchUser();
     }
 
     setIceCandidate(_data) {
-        this.userObj.get(_data.userAddress).ICEcandidate.push(_data.candidate);
     }
 
     setAnswer(_data, _userId) {
