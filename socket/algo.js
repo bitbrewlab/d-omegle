@@ -1,11 +1,10 @@
 class User {
-    constructor(_socketId, _address) {
+    constructor(_socketId, _address, _offer) {
         this.socketId = _socketId;
         this.address = _address;
         this.available = true;
         this.roomId = null;
-        this.offer = null;
-        this.answer = null;
+        this.offer = _offer;
         this.ICEcandidate = [];
     }
 }
@@ -21,16 +20,13 @@ class Room {
 class MainAlgo {
     constructor() {
         this.users = [];
-        this.userObj = new Map();
+        this.connectSocket = [];
     }
 
     admitUser(_user) {
-        this.users.push(_user.address);
-        this.userObj.set(_user.address, _user);
     }
 
-    setOffer(_object) {
-        this.userObj.get(_object.userAddress).offer = _object.offer;
+    setIceCandidate(_data) {
     }
 
     setAnswer(_data, _userId) {
@@ -58,7 +54,7 @@ class MainAlgo {
     matchUser() {
         const maxRetries = 10;
 
-        if (this.users.length >= 2) {
+        if (this.connectSocket.length >= 2) {
             for (let retry = 0; retry < maxRetries; retry++) {
                 const user1id = this.generateRandomId();
                 const user2id = this.generateRandomId();

@@ -1,12 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getMedia, peerConnection } from "../service/peer.conf";
 import Navbar from "../component/navbar";
-
 import { useAccount, useDisconnect } from "wagmi";
 
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8080/");
 
 export default function Peer() {
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -18,6 +15,12 @@ export default function Peer() {
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
+  const [newPeer, setNewPeer] = useState<any[]>([]);
+
+  const socket = io("http://localhost:8080/", {
+    auth: { userName: account.address },
+  });
+
   const constraints = {
     video: true,
     audio: false,
@@ -27,13 +30,23 @@ export default function Peer() {
     document.title = `${account.address}`;
     initUser();
 
-    socket.on("connect", () => {
-      console.log("socket connected");
-    });
+    const onConnect = () => console.log("socket connected");
+    const onNewOffer = (users: any) => {
+      setNewPeer([...users]);
+    };
+    // const onIceCandidateAdded = (users: any) => console.log("offer", users);
+    const onDisconnect = () => console.log("socket disconnected");
 
-    socket.on("disconnect", () => {
-      console.log("socket disconnected");
-    });
+    socket.on("connect", onConnect);
+    socket.on("newUser", (users) => onNewOffer(users));
+    // socket.on("addIceCandidate", (users) => onIceCandidateAdded(users));
+    socket.on("disconnect", onDisconnect);
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("newOffers", onNewOffer);
+      socket.off("disconnect", onDisconnect);
+    };
   }, []);
 
   const initUser = async () => {
@@ -43,20 +56,29 @@ export default function Peer() {
     localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream);
     });
-
-    socket.emit("admitUser", { userAddress: account.address });
-
     createOffer();
   };
 
   const createOffer = async () => {
     const offer = await peerConnection.createOffer();
     peerConnection.setLocalDescription(offer);
-    socket.emit("offer", {
-      offer: offer,
+
+    socket.emit("admitUser", {
       userAddress: account.address,
+      offer: offer,
     });
-    peerConnection.addEventListener("icecandidate", (event) => {});
+    peerConnection.addEventListener("icecandidate", (event) => {
+      if (event.candidate) {
+        socket.emit("addIceCandidate", {
+          userAddress: account.address,
+          candidate: event.candidate,
+        });
+      }
+    });
+  };
+
+  const createAnswer = async (offer: RTCSessionDescriptionInit) => {
+    console.log("peer", offer);
   };
 
   return (
@@ -64,6 +86,17 @@ export default function Peer() {
       <div className="absolute inset-x-0 top-0">
         <Navbar />
       </div>
+
+      <div className="absolute inset-x-5 top-12 gap-5">
+        {newPeer.map((peer, index) => (
+          <div key={index}>
+            <button className="bg-sky-700 text-white rounded-lg p-3 text-xs">
+              {peer.address.slice(0, 8) + "..." + peer.address.slice(-4)}
+            </button>
+          </div>
+        ))}
+      </div>
+
       <div className="absolute inset-0">
         <div className="flex items-center justify-center gap-4 h-full">
           <video

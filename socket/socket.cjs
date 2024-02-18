@@ -21,7 +21,13 @@ const io = new Server(server, {
 const port = process.env.PORT || 8080;
 
 io.on('connection', (socket) => {
+    const userName = socket.handshake.auth.userName;
     console.log("domegle connection esablish on", socket.id);
+
+    mainAlgoInstance.connectSocket.push({
+        socketId: socket.id,
+        userName
+    });
 
     socket.emit('connection-success', {
         status: "connection-success",
@@ -33,26 +39,18 @@ io.on('connection', (socket) => {
     });
 
     socket.on('admitUser', data => {
-        var user = new User(socket.id, data.userAddress);
-        mainAlgoInstance.admitUser(user);
-
-        socket.broadcast.emit('new user admit', user)
-
-        //TODO: start from here
-        // io.emit('wating pool', mainAlgoInstance.users);
-        // io.emit('sdp', data);
+        var user = new User(socket.id, data.userAddress, data.offer);
+        mainAlgoInstance.users.push(user);
+        socket.broadcast.emit('newUser', mainAlgoInstance.users.slice(-1))
     });
 
-    socket.on('offer', data => {
-        mainAlgoInstance.setOffer(data);
-        socket.broadcast.emit('offer emit', data.offer);
-        // io.emit('offer', data);
+    socket.on("addIceCandidate", data => {
+        let offer = mainAlgoInstance.users.find(user => user.address == data.userAddress);
+        if (offer) {
+            offer.ICEcandidate.push(data.candidate);
+        }
+        // socket.broadcast.emit("addIceCandidate", offer);
     });
-
-    socket.on('candidate', data => {
-        console.log(data);
-        io.emit('candidate', data);
-    })
 });
 
 server.listen(port, () => {

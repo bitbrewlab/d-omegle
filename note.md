@@ -29,9 +29,9 @@ Signaling Server (Socket)
 
 `CLIENT1`& Signaling server wait for answerer/CLIENT2
 
-- [ ] `CLIENT2` loads up the webpage with io.connect()
+- [x] `CLIENT2` loads up the webpage with io.connect()
   - a new client is connected to signaling server
-- [ ] socket.io emit out the RTSessionDesc to the new client
+- [x] socket.io emit out the RTSessionDesc to the new client
   - an offer to be sent!
 - [ ] `CLIENT2` runs getUserMedia()
 - [ ] `CLIENT2` creates a peerConnection()
