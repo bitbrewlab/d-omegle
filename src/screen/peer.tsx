@@ -15,8 +15,6 @@ export default function Peer() {
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
-  const [newPeer, setNewPeer] = useState<any[]>([]);
-
   const socket = io("http://localhost:8080/", {
     auth: { userName: account.address },
   });
@@ -30,22 +28,33 @@ export default function Peer() {
     document.title = `${account.address}`;
     initUser();
 
-    const onConnect = () => console.log("socket connected");
-    const onNewOffer = (users: any) => {
-      setNewPeer([...users]);
-      peerConnection.setRemoteDescription(users[0].offer);
-      createAnswer();
+    const onConnect = (socketObj: any) =>
+      console.log("socket connected", socketObj);
+
+    const onNewOffer = (user: any) => {
+      console.log(user);
+      peerConnection.setRemoteDescription(user.partner.sdp);
+      peerConnection.addIceCandidate(user.partner.iceCandidate);
+      createAnswer(user.sessionId);
     };
-    // const onIceCandidateAdded = (users: any) => console.log("offer", users);
+
+    const onGetAnswer = (user: any) => {
+      console.log("Yeee ! gen an answer", user);
+      peerConnection.setRemoteDescription(user.answer.sdp);
+      peerConnection.addIceCandidate(user.answer.iceCandidate);
+    };
+
     const onDisconnect = () => console.log("socket disconnected");
 
-    socket.on("connect", onConnect);
-    socket.on("newUser", (users) => onNewOffer(users));
-    // socket.on("addIceCandidate", (users) => onIceCandidateAdded(users));
+    socket.on("connection-success", (socket) => onConnect(socket));
+    socket.on("matched", (users) => onNewOffer(users));
+    socket.on("getAnswer", (user) => {
+      onGetAnswer(user);
+    });
     socket.on("disconnect", onDisconnect);
 
     return () => {
-      socket.off("connect", onConnect);
+      socket.off("connection-success", onConnect);
       socket.off("newOffers", onNewOffer);
       socket.off("disconnect", onDisconnect);
     };
@@ -70,43 +79,34 @@ export default function Peer() {
       offer: offer,
     });
 
-    IceCandidate();
+    await IceCandidate();
   };
 
-  const createAnswer = async () => {
+  const createAnswer = async (_sessionId: string) => {
     const answer = await peerConnection.createAnswer();
     peerConnection.setLocalDescription(answer);
-    console.log("answer", answer);
+    socket.emit("submitAnswer", {
+      sessionId: _sessionId,
+      answer: answer,
+    });
   };
 
-  const IceCandidate = () =>
+  const IceCandidate = async () => {
     peerConnection.addEventListener("icecandidate", (event) => {
       if (event.candidate) {
-        console.log(event.candidate);
         socket.emit("addIceCandidate", {
           userAddress: account.address,
           candidate: event.candidate,
         });
       }
     });
+    // socket.emit("generateRoom");
+  };
 
   return (
     <div className="relative h-screen ">
       <div className="absolute inset-x-0 top-0">
         <Navbar />
-      </div>
-
-      <div className="absolute inset-x-5 top-12 gap-5">
-        {newPeer.map((peer, index) => (
-          <div key={index}>
-            <button
-              className="bg-sky-700 text-white rounded-lg p-3 text-xs"
-              onClick={() => createAnswer()}
-            >
-              {peer.address.slice(0, 4) + "..." + peer.address.slice(-4)}
-            </button>
-          </div>
-        ))}
       </div>
 
       <div className="absolute inset-0">
