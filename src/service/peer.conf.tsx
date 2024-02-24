@@ -10,3 +10,10 @@ export const getMedia = async (constraints: {
 export const peerConnection = new RTCPeerConnection({
   iceServers: myPeerConnection,
 });
+
+// export const iceCandidates = (_peerAddress, _sessionId) =>
+//   peerConnection.addEventListener("icecandidate", (event) => {
+//     if (event.candidate) {
+//       return event.candidate;
+//     }
+//   });

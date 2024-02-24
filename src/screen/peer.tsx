@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { getMedia, peerConnection } from "../service/peer.conf";
 import Navbar from "../component/navbar";
 import { useAccount, useDisconnect } from "wagmi";
@@ -31,26 +31,27 @@ export default function Peer() {
     const onConnect = (socketObj: any) =>
       console.log("socket connected", socketObj);
 
-    const onNewOffer = (user: any) => {
+    const onNewOffer = async (user: any) => {
       console.log(user);
+      iceCandidate(user.partner.socketId);
       peerConnection.setRemoteDescription(user.partner.sdp);
-      peerConnection.addIceCandidate(user.partner.iceCandidate);
       createAnswer(user.sessionId);
     };
 
-    const onGetAnswer = (user: any) => {
-      console.log("Yeee ! gen an answer", user);
+    const onGetAnswer = async (user: any) => {
+      iceCandidate(user.answer.socketId);
       peerConnection.setRemoteDescription(user.answer.sdp);
-      peerConnection.addIceCandidate(user.answer.iceCandidate);
+      console.log("Yeee ! gen an answer", user);
     };
 
     const onDisconnect = () => console.log("socket disconnected");
 
     socket.on("connection-success", (socket) => onConnect(socket));
     socket.on("matched", (users) => onNewOffer(users));
-    socket.on("getAnswer", (user) => {
-      onGetAnswer(user);
-    });
+    socket.on("getAnswer", (user) => onGetAnswer(user));
+    socket.on("getIceCandidate", (candidate) =>
+      peerConnection.addIceCandidate(candidate)
+    );
     socket.on("disconnect", onDisconnect);
 
     return () => {
@@ -78,8 +79,6 @@ export default function Peer() {
       userAddress: account.address,
       offer: offer,
     });
-
-    await IceCandidate();
   };
 
   const createAnswer = async (_sessionId: string) => {
@@ -91,17 +90,15 @@ export default function Peer() {
     });
   };
 
-  const IceCandidate = async () => {
+  const iceCandidate = (_peerSocketId: any) =>
     peerConnection.addEventListener("icecandidate", (event) => {
       if (event.candidate) {
-        socket.emit("addIceCandidate", {
-          userAddress: account.address,
+        socket.emit("passCandidates", {
+          peerAddress: _peerSocketId,
           candidate: event.candidate,
         });
       }
     });
-    // socket.emit("generateRoom");
-  };
 
   return (
     <div className="relative h-screen ">

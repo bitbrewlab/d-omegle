@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 var cors = require('cors')
 
-const { User, Session, users, sessions } = require("./algo");
+const { User, Session, users, sessions, IceCandidates, iceCandidates } = require("./algo");
 const { Server } = require("socket.io");
 
 const app = express();
@@ -31,13 +31,20 @@ function matchUsers() {
     const offerer = users[offererIndex];
     const answerer = users[answererIndex];
 
-    const session = new Session(offerer, answerer);
-    sessions.push(session);
+    // const offererCandidate = iceCandidates.find(candidate => offerer.address === candidate.address);
+    // const answererCandidate = iceCandidates.find(candidate => answerer.address === candidate.address);
 
-    io.to(answerer.socketId).emit('matched', { sessionId: session.sessionId, partner: offerer });
+    // console.log("offerCandidate", offererCandidate);
+    // console.log("answerCandidate", answererCandidate);
 
     users.splice(offererIndex, 1);
     users.splice(answererIndex > offererIndex ? answererIndex - 1 : answererIndex, 1);
+
+    const session = new Session(offerer, answerer);
+    sessions.push(session);
+
+    io.to(answerer.socketId).emit('matched', { sessionId: session.sessionId, partner: offerer, user: answerer });
+
 }
 
 io.on('connection', (socket) => {
@@ -53,6 +60,9 @@ io.on('connection', (socket) => {
         const userIndex = users.findIndex(user => user.socketId === socket.id);
         if (userIndex !== -1) users.splice(userIndex, 1);
 
+        // const iceCandidate = iceCandidates.findIndex(candidate => candidate.socketId === socket.id);
+        // if (iceCandidate !== -1) iceCandidates.splice(iceCandidate, 1);
+
     });
 
     socket.on('admitUser', data => {
@@ -61,16 +71,9 @@ io.on('connection', (socket) => {
         matchUsers();
     });
 
-
-    socket.on("addIceCandidate", data => {
-        let user = users.find(user => user.address == data.userAddress);
-        if (user) {
-            user.iceCandidate.push(data.candidate);
-        };
-    });
-
-    socket.on('generateRoom', () => {
-
+    socket.on("passCandidates", (data) => {
+        console.log(data);
+        socket.to(data.peerAddress).emit("getIceCandidate", data.candidate);
     });
 
     socket.on('submitAnswer', data => {
