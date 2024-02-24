@@ -65,8 +65,17 @@ export default function Peer() {
     localStream = await getMedia(constraints);
     localVideoRef.current!.srcObject = localStream;
 
+    remoteStream = new MediaStream();
+    remoteVideoRef.current!.srcObject = remoteStream;
+
     localStream.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream);
+    });
+
+    peerConnection.addEventListener("track", (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.addTrack(track);
+      });
     });
     createOffer();
   };
