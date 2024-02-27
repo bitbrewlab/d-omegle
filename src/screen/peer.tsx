@@ -15,7 +15,7 @@ export default function Peer() {
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
-  const socket = io("http://localhost:8080/", {
+  const socket = io("https://app-two-dun.vercel.app/", {
     auth: { userName: account.address },
   });
 
