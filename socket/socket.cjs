@@ -11,7 +11,7 @@ app.use(cors());
 const server = http.createServer({}, app);
 const io = new Server(server, {
     cors: {
-        origins: "http://localhost:5173/",
+        origins: "https://app.0xdomegle.com/",
     }
 });
 
