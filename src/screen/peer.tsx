@@ -21,7 +21,7 @@ export default function Peer() {
 
   const constraints = {
     video: true,
-    audio: false,
+    audio: true,
   };
 
   useEffect(() => {
