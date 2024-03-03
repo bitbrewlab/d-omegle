@@ -15,13 +15,13 @@ export default function Peer() {
   const { disconnect } = useDisconnect();
   const account = useAccount();
 
-  const socket = io("https://app-two-dun.vercel.app/", {
+  const socket = io("https://socket.0xdomegle.com/", {
     auth: { userName: account.address },
   });
 
   const constraints = {
     video: true,
-    audio: false,
+    audio: true,
   };
 
   useEffect(() => {
