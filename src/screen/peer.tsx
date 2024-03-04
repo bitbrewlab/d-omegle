@@ -13,7 +13,9 @@ export default function Peer() {
   let remoteStream: MediaStream;
 
   const { disconnect } = useDisconnect();
+
   const account = useAccount();
+  const sessionObject = useRef<any>(null);
 
   const socket = io("https://socket.0xdomegle.com/", {
     auth: { userName: account.address },
@@ -24,8 +26,15 @@ export default function Peer() {
     audio: true,
   };
 
+  const detectKeyDownEvent = (e: any) => {
+    if (e.code === "Escape") {
+      socket.emit("sessionEnd", sessionObject.current);
+      sessionEnd();
+    }
+  };
   useEffect(() => {
     document.title = `${account.address}`;
+    document.addEventListener("keydown", detectKeyDownEvent, true);
     initUser();
 
     const onConnect = (socketObj: any) =>
@@ -33,6 +42,11 @@ export default function Peer() {
 
     const onNewOffer = async (user: any) => {
       console.log(user);
+      sessionObject.current = {
+        sessionId: user.sessionId,
+        remoteUser: user.partner.address,
+        remoteSocketId: user.partner.socketId,
+      };
       iceCandidate(user.partner.socketId);
       peerConnection.setRemoteDescription(user.partner.sdp);
       createAnswer(user.sessionId);
@@ -40,6 +54,11 @@ export default function Peer() {
 
     const onGetAnswer = async (user: any) => {
       iceCandidate(user.answer.socketId);
+      sessionObject.current = {
+        sessionId: user.sessionId,
+        remoteUser: user.answer.address,
+        remoteSocketId: user.answer.socketId,
+      };
       peerConnection.setRemoteDescription(user.answer.sdp);
       console.log("Yeee ! gen an answer", user);
     };
@@ -52,6 +71,10 @@ export default function Peer() {
     socket.on("getIceCandidate", (candidate) =>
       peerConnection.addIceCandidate(candidate)
     );
+    socket.on("endSession", () => {
+      console.log("event emit");
+      sessionEnd();
+    });
     socket.on("disconnect", onDisconnect);
 
     return () => {
@@ -108,6 +131,23 @@ export default function Peer() {
         });
       }
     });
+
+  const sessionEnd = () => {
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = null;
+      socket.disconnect();
+      socket.connect();
+      initUser();
+    }
+  };
+
+  // const exitToApp = () => {
+  //   if (remoteVideoRef.current) {
+  //     remoteVideoRef.current.srcObject = null;
+  //     socket.disconnect();
+  //     disconnect();
+  //   }
+  // };
 
   return (
     <div className="relative h-screen ">
