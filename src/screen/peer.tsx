@@ -141,13 +141,14 @@ export default function Peer() {
     }
   };
 
-  const exitToApp = () => {
-    if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null;
-      socket.disconnect();
-      disconnect();
-    }
-  };
+  // const exitToApp = () => {
+  //   if (remoteVideoRef.current) {
+  //     remoteVideoRef.current.srcObject = null;
+  //     socket.disconnect();
+  //     disconnect();
+  //   }
+  // };
+
   return (
     <div className="relative h-screen ">
       <div className="absolute inset-x-0 top-0">
