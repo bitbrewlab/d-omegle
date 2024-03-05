@@ -1,4 +1,4 @@
-import { polygonMumbai } from "wagmi/chains";
+import { polygonZkEvmTestnet } from "wagmi/chains";
 import { useEffect } from "react";
 import { useAccount, useConnect, useSwitchChain } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -8,8 +8,28 @@ export default function Home() {
   const { connect } = useConnect();
   const { switchChain } = useSwitchChain();
 
+  const checkNetwork = async () => {
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0x5a2",
+          chainName: "Polygon zkEVM Testnet",
+          rpcUrls: ["https://rpc.public.zkevm-test.net"],
+          nativeCurrency: {
+            name: "ETH",
+            symbol: "ETH",
+            decimals: 18,
+          },
+          blockExplorerUrls: ["https://explorer.public.zkevm-test.net"],
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
     document.title = "D-omegle";
+    checkNetwork();
   });
 
   const checkStack = () => {
@@ -74,13 +94,13 @@ export default function Home() {
 
             <button
               className={`rounded  border m-5 ${
-                account.chainId === polygonMumbai.id
+                account.chainId === polygonZkEvmTestnet.id
                   ? "bg-green-100 text-[#0D6E6E] border-[#0D6E6E] "
                   : "bg-red-100 text-[#c21d03] border-[#c21d03]"
               } text-xs font-medium mr-2 px-2.5 py-0.5`}
               onClick={async () =>
                 await switchChain({
-                  chainId: polygonMumbai.id,
+                  chainId: polygonZkEvmTestnet.id,
                 })
               }
             >
