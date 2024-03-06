@@ -135,19 +135,22 @@ export default function Peer() {
   const sessionEnd = () => {
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
+      peerConnection.restartIce();
       socket.disconnect();
       socket.connect();
       initUser();
     }
   };
 
-  // const exitToApp = () => {
-  //   if (remoteVideoRef.current) {
-  //     remoteVideoRef.current.srcObject = null;
-  //     socket.disconnect();
-  //     disconnect();
-  //   }
-  // };
+  const exitToApp = () => {
+    peerConnection.restartIce();
+    peerConnection.close();
+    if (remoteVideoRef.current) {
+      remoteVideoRef.current.srcObject = null;
+      socket.disconnect();
+      disconnect();
+    }
+  };
 
   return (
     <div className="relative h-screen ">
@@ -179,7 +182,9 @@ export default function Peer() {
       <div className="absolute inset-y-100 right-5 bottom-5 ">
         <button
           className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg "
-          onClick={() => disconnect()}
+          onClick={() => {
+            exitToApp();
+          }}
         >
           Disconnect
         </button>
