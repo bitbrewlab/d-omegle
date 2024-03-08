@@ -2,6 +2,7 @@ import { useAccount } from "wagmi";
 import Peer from "./screen/peer";
 import Home from "./screen/Home";
 import { polygonZkEvmTestnet } from "wagmi/chains";
+import Peer2 from "./screen/Peer2";
 
 export default function App() {
   const { isConnected } = useAccount();
@@ -9,7 +10,7 @@ export default function App() {
 
   if (window.ethereum) {
     if (isConnected && account.chainId === polygonZkEvmTestnet.id)
-      return <Peer />;
+      return <Peer2 />;
     return <Home />;
   } else {
     return (
