@@ -1,4 +1,4 @@
-export const myPeerConnection = new RTCPeerConnection({
+export const peerConnection = new RTCPeerConnection({
   iceServers: [
     {
       urls: "stun:stun.relay.metered.ca:80",
@@ -25,3 +25,5 @@ export const myPeerConnection = new RTCPeerConnection({
     },
   ],
 });
+
+export const chatChannel = peerConnection.createDataChannel("chat");

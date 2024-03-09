@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-import { peerConnection } from "../service/peer.conf";
+import { socket } from "../utils/socket_connection";
+import { chatChannel, peerConnection } from "../service/peer.config";
+import Navbar from "../component/navbar";
 
 export default function Peer2() {
-  const socket = io("http://localhost:1629");
-
   const constraints = {
     video: true,
     audio: false,
@@ -27,6 +26,7 @@ export default function Peer2() {
   useEffect(() => {
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
+    chatChannel.onopen = () => console.log("able to communicate");
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
 
@@ -127,8 +127,9 @@ export default function Peer2() {
 
   return (
     <div>
-      <div className="flex gap-5">
-        <div className="shadow-lg rounded-2xl saturate-150">
+      <Navbar />
+      <div className="flex flex-col lg:flex-row gap-5 justify-center items-center my-10">
+        <div className="shadow-lg rounded-2xl saturate-150 w-max">
           <video
             ref={localVideoRef}
             autoPlay
@@ -137,7 +138,7 @@ export default function Peer2() {
             className="rounded-2xl object-cover w-96 h-72"
           />
         </div>
-        <div className=" shadow-lg rounded-2xl saturate-150">
+        <div className=" shadow-lg rounded-2xl saturate-150 w-max">
           <video
             ref={remoteVideoRef}
             autoPlay
@@ -145,6 +146,12 @@ export default function Peer2() {
             className="w-96 h-72 object-cover rounded-2xl"
           />
         </div>
+      </div>
+      <div className="w-full hidden lg:flex absolute bottom-0 py-5 px-10 justify-center items-center">
+        <p>@Developed by BitsBrewLab with ❤️</p>
+        <button className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5">
+          Disconnect
+        </button>
       </div>
     </div>
   );
