@@ -6,7 +6,7 @@ import Navbar from "../component/navbar";
 export default function Peer2() {
   const constraints = {
     video: true,
-    audio: false,
+    audio: true,
   };
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
