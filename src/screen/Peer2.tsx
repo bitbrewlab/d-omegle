@@ -18,17 +18,29 @@ export default function Peer2() {
 
   let sessionObject = useRef<any>(null);
 
+  const detectKeyDownEvent = (e: any) => {
+    if (e.code === "Escape") {
+      console.log("session restart");
+    }
+  };
+
   useEffect(() => {
+    document.addEventListener("keydown", detectKeyDownEvent, true);
+
+    // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
 
+    // webRTC peer connection events
     socket.on("createOffer", (data) => onOffer(data));
     socket.on("createAnswer", (data) => onAnswer(data));
     socket.on("reciveAnswer", (data) => onAnswerRecive(data));
-    socket.on("IceCandidateRecived", (data) => {
-      console.log("candidate recived from server");
-      peerConnection.addIceCandidate(data.candidate);
-    });
+    socket.on("IceCandidateRecived", (data) => onCandidatesRecive(data));
     socket.on("sessionEnded", onSessionEnd);
+
+    return () => {
+      peerConnection.close();
+      socket.disconnect();
+    };
   }, []);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
@@ -41,7 +53,13 @@ export default function Peer2() {
     remoteStream = new MediaStream();
     remoteVideoRef.current!.srcObject = remoteStream;
 
-    localStream.getTracks().map((track) => peerConnection.addTrack(track));
+    localStream
+      .getTracks()
+      .map((track) => peerConnection.addTrack(track, localStream));
+
+    peerConnection.ontrack = (event) => {
+      event.streams[0].getTracks().map((track) => remoteStream.addTrack(track));
+    };
 
     socket.emit("adminUser", {
       socketId: sessionObject.current.localUserSocketID,
@@ -50,7 +68,7 @@ export default function Peer2() {
   };
 
   const onOffer = async (data: any) => {
-    const offer = await peerConnection.createOffer({ iceRestart: true });
+    const offer = await peerConnection.createOffer();
     peerConnection.setLocalDescription(offer);
 
     sessionObject.current.remoteUserSocketID = data.answererID;
@@ -60,47 +78,52 @@ export default function Peer2() {
       offer: offer,
     });
 
-    console.log("offer sant to server");
-    generateCandidates(data.answererID);
+    generateCandidates();
   };
 
   const onAnswer = async (data: any) => {
     peerConnection.setRemoteDescription(data.offer);
-    console.log("offer recived from server");
 
     const answer = await peerConnection.createAnswer();
+    peerConnection.setLocalDescription(answer);
 
     sessionObject.current.remoteUserSocketID = data.peers.offererID;
-    generateCandidates(data.peers.offererID);
 
     socket.emit("sendAnswer", {
       answer: answer,
       peers: data.peers,
     });
 
-    console.log("answer sent to server");
+    generateCandidates();
   };
 
   const onAnswerRecive = async (data: any) => {
     await peerConnection.setRemoteDescription(data.answer);
-    console.log("answer recived from server");
-    console.log(sessionObject.current);
-    // generateCandidates(data.peers.offererID);
   };
 
-  const generateCandidates = (_peerSocketId: string) => {
-    console.log("candidate sant to server", _peerSocketId);
-    peerConnection.addEventListener("icecandidate", (event) => {
+  const generateCandidates = () => {
+    peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
         socket.emit("exchangeCandidates", {
-          remoteSocketId: _peerSocketId,
-          candidate: event.candidate,
+          remoteSocketId: sessionObject.current.remoteUserSocketID,
+          candidate: event.candidate.toJSON(),
         });
       }
-    });
+    };
   };
 
-  const onSessionEnd = () => {};
+  const onCandidatesRecive = (data: any) => {
+    const candidate = new RTCIceCandidate(data);
+    peerConnection
+      .addIceCandidate(candidate)
+      .then(() => console.log("Successfully added ICE candidate"))
+      .catch((e) => console.error("Error adding ICE candidate:", e));
+  };
+
+  const onSessionEnd = () => {
+    socket.disconnect();
+    socket.connect();
+  };
 
   return (
     <div>
@@ -119,7 +142,7 @@ export default function Peer2() {
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            className="w-96 h-72 rounded-2xl"
+            className="w-96 h-72 object-cover rounded-2xl"
           />
         </div>
       </div>
