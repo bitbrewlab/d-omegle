@@ -1,3 +1,3 @@
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:1629");
+export const socket = io("https://socket.0xdomegle.com");
