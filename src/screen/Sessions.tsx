@@ -26,7 +26,9 @@ export default function Peer2() {
     }
   };
 
-  const peerConnectionStatus = () => {
+  const peerConnectionStatus = async () => {
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    localVideoRef.current!.srcObject = localStream;
     if (peerConnection.current) {
       console.log(peerConnection.current.signalingState);
     }
@@ -65,9 +67,6 @@ export default function Peer2() {
     });
 
     console.log(peerConnection.current?.signalingState);
-
-    localStream = await navigator.mediaDevices.getUserMedia(constraints);
-    localVideoRef.current!.srcObject = localStream;
 
     remoteStream = new MediaStream();
     remoteVideoRef.current!.srcObject = remoteStream;
