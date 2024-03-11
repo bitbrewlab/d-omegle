@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { socket } from "../utils/socket_connection";
-import { chatChannel, peerConnection } from "../service/peer.config";
+import { iceSercer } from "../service/peer.config";
 import Navbar from "../component/navbar";
+import { Link } from "react-router-dom";
 
 export default function Peer2() {
   const constraints = {
@@ -15,23 +16,31 @@ export default function Peer2() {
   let localStream: MediaStream;
   let remoteStream: MediaStream;
 
+  let peerConnection = useRef<RTCPeerConnection>();
   let sessionObject = useRef<any>(null);
 
   const detectKeyDownEvent = (e: any) => {
     if (e.code === "Escape") {
-      console.log("session restart");
-      socket.emit("changeSession", sessionObject.current.remoteUserSocketID);
+      socket.emit("changeSession", sessionObject.current);
       onSessionEnd();
     }
   };
 
+  const peerConnectionStatus = () => {
+    if (peerConnection.current) {
+      console.log(peerConnection.current.signalingState);
+    }
+  };
+
   useEffect(() => {
+    // check all states of peer connection
+    peerConnectionStatus();
+
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
-    chatChannel.onopen = () => console.log("able to communicate");
+    // chatChannel.onopen = () => {};
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
-
     socket.on("activeUser", (data) => console.log(data));
 
     // webRTC peer connection events
@@ -39,18 +48,23 @@ export default function Peer2() {
     socket.on("createAnswer", (data) => onAnswer(data));
     socket.on("reciveAnswer", (data) => onAnswerRecive(data));
     socket.on("IceCandidateRecived", (data) => onCandidatesRecive(data));
-    socket.on("sessionEnded", onSessionEnd);
+    socket.on("sessionEnded", () => onSessionEnd());
 
     return () => {
-      peerConnection.close();
+      peerConnection.current?.close();
       socket.disconnect();
+      peerConnectionStatus();
     };
-  }, []);
+  }, [peerConnection.current?.signalingState]);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
-    console.log("create new one");
     sessionObject.current = _socket;
-    console.log(_socket);
+
+    peerConnection.current = new RTCPeerConnection({
+      iceServers: iceSercer,
+    });
+
+    console.log(peerConnection.current?.signalingState);
 
     localStream = await navigator.mediaDevices.getUserMedia(constraints);
     localVideoRef.current!.srcObject = localStream;
@@ -60,11 +74,15 @@ export default function Peer2() {
 
     localStream
       .getTracks()
-      .map((track) => peerConnection.addTrack(track, localStream));
+      .map((track) => peerConnection.current?.addTrack(track, localStream));
 
-    peerConnection.ontrack = (event) => {
-      event.streams[0].getTracks().map((track) => remoteStream.addTrack(track));
-    };
+    if (peerConnection.current) {
+      peerConnection.current.ontrack = (event) => {
+        event.streams[0]
+          .getTracks()
+          .map((track) => remoteStream.addTrack(track));
+      };
+    }
 
     socket.emit("adminUser", {
       socketId: sessionObject.current.localUserSocketID,
@@ -73,8 +91,10 @@ export default function Peer2() {
   };
 
   const onOffer = async (data: any) => {
-    const offer = await peerConnection.createOffer();
-    peerConnection.setLocalDescription(offer);
+    const offer = await peerConnection.current!.createOffer({
+      iceRestart: true,
+    });
+    peerConnection.current!.setLocalDescription(offer);
 
     sessionObject.current.remoteUserSocketID = data.answererID;
 
@@ -87,10 +107,10 @@ export default function Peer2() {
   };
 
   const onAnswer = async (data: any) => {
-    peerConnection.setRemoteDescription(data.offer);
+    peerConnection.current?.setRemoteDescription(data.offer);
 
-    const answer = await peerConnection.createAnswer();
-    peerConnection.setLocalDescription(answer);
+    const answer = await peerConnection.current?.createAnswer();
+    peerConnection.current?.setLocalDescription(answer);
 
     sessionObject.current.remoteUserSocketID = data.peers.offererID;
 
@@ -103,37 +123,44 @@ export default function Peer2() {
   };
 
   const onAnswerRecive = async (data: any) => {
-    await peerConnection.setRemoteDescription(data.answer);
+    await peerConnection.current?.setRemoteDescription(data.answer);
   };
 
   const generateCandidates = () => {
-    peerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        console.log(event.candidate);
-        socket.emit("exchangeCandidates", {
-          remoteSocketId: sessionObject.current.remoteUserSocketID,
-          candidate: event.candidate.toJSON(),
-        });
-      }
-    };
+    if (peerConnection.current) {
+      peerConnection.current.onicecandidate = (event) => {
+        if (event.candidate) {
+          console.log(event.candidate);
+          socket.emit("exchangeCandidates", {
+            remoteSocketId: sessionObject.current.remoteUserSocketID,
+            candidate: event.candidate.toJSON(),
+          });
+        }
+      };
+    }
   };
 
   const onCandidatesRecive = (data: any) => {
     const candidate = new RTCIceCandidate(data);
-    peerConnection
-      .addIceCandidate(candidate)
-      .then(() => console.log("Successfully added ICE candidate"))
-      .catch((e) => console.error("Error adding ICE candidate:", e));
+    peerConnection.current
+      ?.addIceCandidate(candidate)
+      .then(() => {})
+      .catch(() => {});
   };
 
   const onSessionEnd = () => {
-    remoteStream.getTracks().map((tracks) => tracks.stop());
+    peerConnection.current?.close();
     socket.disconnect();
     socket.connect();
   };
 
   const exitToPlatform = () => {
-    peerConnection.close();
+    localStream.getTracks().forEach((track) => track.stop());
+    remoteStream.getTracks().forEach((track) => track.stop());
+    localStream.getTracks().forEach((track) => (track.enabled = false));
+    remoteStream.getTracks().forEach((track) => (track.enabled = false));
+    peerConnection.current?.close();
+    socket.emit("changeSession", sessionObject.current);
     socket.disconnect();
   };
 
@@ -161,12 +188,14 @@ export default function Peer2() {
       </div>
       <div className="w-full hidden lg:flex absolute bottom-0 py-5 px-10 justify-center items-center">
         <p>@Developed by BitsBrewLab with ❤️</p>
-        <button
-          className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5"
-          onClick={exitToPlatform}
-        >
-          Disconnect
-        </button>
+        <Link to={"/"} replace={true}>
+          <button
+            className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5"
+            onClick={exitToPlatform}
+          >
+            Disconnect
+          </button>
+        </Link>
       </div>
     </div>
   );
