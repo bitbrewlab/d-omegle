@@ -20,6 +20,8 @@ export default function Peer2() {
   const detectKeyDownEvent = (e: any) => {
     if (e.code === "Escape") {
       console.log("session restart");
+      socket.emit("changeSession", sessionObject.current.remoteUserSocketID);
+      onSessionEnd();
     }
   };
 
@@ -29,6 +31,8 @@ export default function Peer2() {
     chatChannel.onopen = () => console.log("able to communicate");
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
+
+    socket.on("activeUser", (data) => console.log(data));
 
     // webRTC peer connection events
     socket.on("createOffer", (data) => onOffer(data));
@@ -44,6 +48,7 @@ export default function Peer2() {
   }, []);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
+    console.log("create new one");
     sessionObject.current = _socket;
     console.log(_socket);
 
@@ -104,6 +109,7 @@ export default function Peer2() {
   const generateCandidates = () => {
     peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
+        console.log(event.candidate);
         socket.emit("exchangeCandidates", {
           remoteSocketId: sessionObject.current.remoteUserSocketID,
           candidate: event.candidate.toJSON(),
@@ -121,14 +127,20 @@ export default function Peer2() {
   };
 
   const onSessionEnd = () => {
+    remoteStream.getTracks().map((tracks) => tracks.stop());
     socket.disconnect();
     socket.connect();
+  };
+
+  const exitToPlatform = () => {
+    peerConnection.close();
+    socket.disconnect();
   };
 
   return (
     <div>
       <Navbar />
-      <div className="flex flex-col lg:flex-row gap-5 justify-center items-center my-10">
+      <div className="flex flex-col md:flex-row gap-5 justify-center items-center my-10">
         <div className="shadow-lg rounded-2xl saturate-150 w-max">
           <video
             ref={localVideoRef}
@@ -149,7 +161,10 @@ export default function Peer2() {
       </div>
       <div className="w-full hidden lg:flex absolute bottom-0 py-5 px-10 justify-center items-center">
         <p>@Developed by BitsBrewLab with ❤️</p>
-        <button className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5">
+        <button
+          className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5"
+          onClick={exitToPlatform}
+        >
           Disconnect
         </button>
       </div>

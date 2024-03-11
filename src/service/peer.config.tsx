@@ -1,27 +1,17 @@
 export const peerConnection = new RTCPeerConnection({
   iceServers: [
     {
-      urls: "stun:stun.relay.metered.ca:80",
+      urls: "stun:68.183.91.117:3478",
     },
     {
-      urls: "turn:asia.relay.metered.ca:80",
-      username: "a6d24450d0bb94535a638bf9",
-      credential: "z+a2xBF8Guz8LkSF",
+      urls: "turn:68.183.91.117:3478",
+      username: "domegleturn",
+      credential: "cytbow-zimnij-Werju2",
     },
     {
-      urls: "turn:asia.relay.metered.ca:80?transport=tcp",
-      username: "a6d24450d0bb94535a638bf9",
-      credential: "z+a2xBF8Guz8LkSF",
-    },
-    {
-      urls: "turn:asia.relay.metered.ca:443",
-      username: "a6d24450d0bb94535a638bf9",
-      credential: "z+a2xBF8Guz8LkSF",
-    },
-    {
-      urls: "turns:asia.relay.metered.ca:443?transport=tcp",
-      username: "a6d24450d0bb94535a638bf9",
-      credential: "z+a2xBF8Guz8LkSF",
+      urls: "turn:68.183.91.117:3478?transport=tcp",
+      username: "domegleturn",
+      credential: "cytbow-zimnij-Werju2",
     },
   ],
 });

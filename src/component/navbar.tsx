@@ -32,7 +32,7 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="md:flex gap-3 items-center hidden">
           <p>
             {account.address?.slice(0, 8) + "..." + account.address?.slice(-4)}
           </p>
