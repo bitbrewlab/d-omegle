@@ -1,40 +1,41 @@
-import { polygonZkEvmTestnet } from "wagmi/chains";
+// import { polygonZkEvmTestnet } from "wagmi/chains";
 import { useEffect } from "react";
-import { useAccount, useConnect, useSwitchChain } from "wagmi";
-import { injected } from "wagmi/connectors";
+// import { useAccount, useConnect, useSwitchChain } from "wagmi";
+// import { injected } from "wagmi/connectors";
+import { Link } from "react-router-dom";
 
 export default function Home() {
-  const account = useAccount();
-  const { connect } = useConnect();
-  const { switchChain } = useSwitchChain();
+  // const account = useAccount();
+  // const { connect } = useConnect();
+  // const { switchChain } = useSwitchChain();
 
-  const checkNetwork = async () => {
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: "0x5a2",
-          chainName: "Polygon zkEVM Testnet",
-          rpcUrls: ["https://rpc.public.zkevm-test.net"],
-          nativeCurrency: {
-            name: "ETH",
-            symbol: "ETH",
-            decimals: 18,
-          },
-          blockExplorerUrls: ["https://explorer.public.zkevm-test.net"],
-        },
-      ],
-    });
-  };
+  // const checkNetwork = async () => {
+  //   await window.ethereum.request({
+  //     method: "wallet_addEthereumChain",
+  //     params: [
+  //       {
+  //         chainId: "0x5a2",
+  //         chainName: "Polygon zkEVM Testnet",
+  //         rpcUrls: ["https://rpc.public.zkevm-test.net"],
+  //         nativeCurrency: {
+  //           name: "ETH",
+  //           symbol: "ETH",
+  //           decimals: 18,
+  //         },
+  //         blockExplorerUrls: ["https://explorer.public.zkevm-test.net"],
+  //       },
+  //     ],
+  //   });
+  // };
 
   useEffect(() => {
     document.title = "D-omegle";
-    checkNetwork();
+    // checkNetwork();
   });
 
-  const checkStack = () => {
-    console.log("check stack");
-  };
+  // const checkStack = () => {
+  //   console.log("check stack");
+  // };
 
   return (
     <section className="bg-gray-50 heroBackground">
@@ -52,7 +53,15 @@ export default function Home() {
             enter a whole new world of strangers.
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-8">
+            <Link to="/session" replace={true}>
+              <button className="w-screen rounded px-12 py-3 text-sm font-medium bg-black text-white  hover:text-[#374357] hover:bg-white hover:border-2 hover:border-black duration-200 active:text-[#1f2b3e] sm:w-auto">
+                Let's talk with strangers
+              </button>
+            </Link>
+          </div>
+
+          {/* <div className="mt-8 flex flex-wrap justify-center gap-4">
             <button
               className="block w-full rounded bg-[#0F1C2E] px-12 py-3 text-sm font-medium text-white shadow hover:bg-[#374357] focus:outline-none focus:ring active:bg-[#1f2b3e] sm:w-auto"
               onClick={() =>
@@ -116,7 +125,7 @@ export default function Home() {
             >
               3. Stack Etheres
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
