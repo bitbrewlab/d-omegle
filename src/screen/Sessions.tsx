@@ -1,10 +1,16 @@
 import { useEffect, useRef } from "react";
-import { socket } from "../utils/socket_connection";
+import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
 import Navbar from "../component/navbar";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Peer2() {
+  // ___For Production___
+  const socket = io("https://socket.0xdomegle.com");
+
+  // ___For Local Development___
+  // const socket = io("http://localhost:1629");
+
   const constraints = {
     video: true,
     audio: true,
@@ -19,6 +25,8 @@ export default function Peer2() {
   let peerConnection = useRef<RTCPeerConnection>();
   let sessionObject = useRef<any>(null);
 
+  const navigation = useNavigate();
+
   const detectKeyDownEvent = (e: any) => {
     if (e.code === "Escape") {
       socket.emit("changeSession", sessionObject.current);
@@ -27,20 +35,16 @@ export default function Peer2() {
   };
 
   const peerConnectionStatus = async () => {
-    localStream = await navigator.mediaDevices.getUserMedia(constraints);
-    localVideoRef.current!.srcObject = localStream;
     if (peerConnection.current) {
       console.log(peerConnection.current.signalingState);
     }
   };
 
   useEffect(() => {
-    // check all states of peer connection
     peerConnectionStatus();
 
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
-    // chatChannel.onopen = () => {};
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
     socket.on("activeUser", (data) => console.log(data));
@@ -66,7 +70,8 @@ export default function Peer2() {
       iceServers: iceSercer,
     });
 
-    console.log(peerConnection.current?.signalingState);
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    localVideoRef.current!.srcObject = localStream;
 
     remoteStream = new MediaStream();
     remoteVideoRef.current!.srcObject = remoteStream;
@@ -148,19 +153,24 @@ export default function Peer2() {
   };
 
   const onSessionEnd = () => {
+    remoteStream.getTracks().forEach((track) => track.stop());
+    remoteStream.getTracks().forEach((track) => (track.enabled = false));
     peerConnection.current?.close();
     socket.disconnect();
     socket.connect();
   };
 
-  const exitToPlatform = () => {
-    localStream.getTracks().forEach((track) => track.stop());
-    remoteStream.getTracks().forEach((track) => track.stop());
-    localStream.getTracks().forEach((track) => (track.enabled = false));
-    remoteStream.getTracks().forEach((track) => (track.enabled = false));
-    peerConnection.current?.close();
+  const exitToPlatform = async () => {
     socket.emit("changeSession", sessionObject.current);
+    await localStream.getTracks().forEach((track) => track.stop());
+    await localStream.getTracks().forEach((track) => (track.enabled = false));
+
+    await remoteStream.getTracks().forEach((track) => track.stop());
+    await remoteStream.getTracks().forEach((track) => (track.enabled = false));
+    peerConnection.current?.close();
     socket.disconnect();
+
+    navigation("/");
   };
 
   return (
@@ -187,14 +197,12 @@ export default function Peer2() {
       </div>
       <div className="w-full hidden lg:flex absolute bottom-0 py-5 px-10 justify-center items-center">
         <p>@Developed by BitsBrewLab with ❤️</p>
-        <Link to={"/"} replace={true}>
-          <button
-            className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5"
-            onClick={exitToPlatform}
-          >
-            Disconnect
-          </button>
-        </Link>
+        <button
+          className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5"
+          onClick={exitToPlatform}
+        >
+          Disconnect
+        </button>
       </div>
     </div>
   );

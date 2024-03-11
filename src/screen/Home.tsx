@@ -9,28 +9,28 @@ export default function Home() {
   // const { connect } = useConnect();
   // const { switchChain } = useSwitchChain();
 
-  const checkNetwork = async () => {
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: "0x5a2",
-          chainName: "Polygon zkEVM Testnet",
-          rpcUrls: ["https://rpc.public.zkevm-test.net"],
-          nativeCurrency: {
-            name: "ETH",
-            symbol: "ETH",
-            decimals: 18,
-          },
-          blockExplorerUrls: ["https://explorer.public.zkevm-test.net"],
-        },
-      ],
-    });
-  };
+  // const checkNetwork = async () => {
+  //   await window.ethereum.request({
+  //     method: "wallet_addEthereumChain",
+  //     params: [
+  //       {
+  //         chainId: "0x5a2",
+  //         chainName: "Polygon zkEVM Testnet",
+  //         rpcUrls: ["https://rpc.public.zkevm-test.net"],
+  //         nativeCurrency: {
+  //           name: "ETH",
+  //           symbol: "ETH",
+  //           decimals: 18,
+  //         },
+  //         blockExplorerUrls: ["https://explorer.public.zkevm-test.net"],
+  //       },
+  //     ],
+  //   });
+  // };
 
   useEffect(() => {
     document.title = "D-omegle";
-    checkNetwork();
+    // checkNetwork();
   });
 
   // const checkStack = () => {
