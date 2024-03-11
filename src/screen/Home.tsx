@@ -33,9 +33,9 @@ export default function Home() {
     checkNetwork();
   });
 
-  const checkStack = () => {
-    console.log("check stack");
-  };
+  // const checkStack = () => {
+  //   console.log("check stack");
+  // };
 
   return (
     <section className="bg-gray-50 heroBackground">
