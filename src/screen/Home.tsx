@@ -1,13 +1,13 @@
-import { polygonZkEvmTestnet } from "wagmi/chains";
+// import { polygonZkEvmTestnet } from "wagmi/chains";
 import { useEffect } from "react";
-import { useAccount, useConnect, useSwitchChain } from "wagmi";
-import { injected } from "wagmi/connectors";
+// import { useAccount, useConnect, useSwitchChain } from "wagmi";
+// import { injected } from "wagmi/connectors";
 import { Link } from "react-router-dom";
 
 export default function Home() {
-  const account = useAccount();
-  const { connect } = useConnect();
-  const { switchChain } = useSwitchChain();
+  // const account = useAccount();
+  // const { connect } = useConnect();
+  // const { switchChain } = useSwitchChain();
 
   const checkNetwork = async () => {
     await window.ethereum.request({
