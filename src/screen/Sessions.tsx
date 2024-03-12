@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
 import Navbar from "../component/navbar";
