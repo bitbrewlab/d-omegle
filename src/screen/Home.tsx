@@ -1,4 +1,6 @@
 // import { polygonZkEvmTestnet } from "wagmi/chains";
+import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
 // import { useAccount, useConnect, useSwitchChain } from "wagmi";
 // import { injected } from "wagmi/connectors";
@@ -38,7 +40,7 @@ export default function Home() {
   // };
 
   return (
-    <section className="bg-gray-50 heroBackground">
+    <section className="bg-gray-50 heroBackground h-dvh">
       <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
         <div className="mx-auto text-center bg-white px-12 py-5 rounded-2xl border-2 border-black">
           <h1 className="text-3xl font-extrabold sm:text-5xl">
@@ -48,17 +50,34 @@ export default function Home() {
             </strong>
           </h1>
 
-          <p className="mt-4 max-w-xl sm:text-xl/relaxed">
-            Get ready to dazzle with your best smile 😊, as you're about to
-            enter a whole new world of strangers.
-          </p>
+          <div className="max-w-full flex justify-center">
+            <p className="mt-4 max-w-xl sm:text-xl/relaxed">
+              Get ready to dazzle with your best smile 😊, as you're about to
+              enter a whole new world of strangers.
+            </p>
+          </div>
 
-          <div className="mt-8">
-            <Link to="/session" replace={true}>
-              <button className="w-screen rounded px-12 py-3 text-sm font-medium bg-black text-white  hover:text-[#374357] hover:bg-white hover:border-2 hover:border-black duration-200 active:text-[#1f2b3e] sm:w-auto">
+          <div className="my-5">
+            <Link to={"/session"} replace={true}>
+              <button className="bg-black text-white px-5 py-3 rounded-xl">
                 Let's talk with strangers
+                <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
               </button>
             </Link>
+          </div>
+
+          <div className="mt-5">
+            <p className="font-bold underline">For More Peace 😇</p>
+            <ul className="list-outside">
+              <li>
+                Hit the <span className="bg-gray-200 px-1">Esc</span> key to
+                bail on this session like it's a bad date.
+              </li>
+              <li>
+                Got some words of wisdom or a funny quip about our awkward
+                phase? Drop your feedback like it's hot.
+              </li>
+            </ul>
           </div>
 
           {/* <div className="mt-8 flex flex-wrap justify-center gap-4">

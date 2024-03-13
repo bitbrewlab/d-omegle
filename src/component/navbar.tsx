@@ -13,7 +13,7 @@ export default function Navbar() {
       <div className="items-center px-4 max-w-screen-xl mx-auto md:flex md:px-8">
         <div className="flex items-center justify-between py-3 md:py-5 md:block">
           <a href="#">
-            <h1 className="text-xl font-extrabold">D-Omegle</h1>
+            <h1 className="text-xl text-center font-extrabold">D-Omegle</h1>
           </a>
         </div>
         <div className="flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 hidden">
@@ -32,11 +32,15 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
-        <div className="md:flex gap-3 items-center hidden">
-          <p>
-            {account.address?.slice(0, 8) + "..." + account.address?.slice(-4)}
-          </p>
-        </div>
+        {account.address && (
+          <div className="md:flex gap-3 items-center hidden">
+            <p>
+              {account.address?.slice(0, 8) +
+                "..." +
+                account.address?.slice(-4)}
+            </p>
+          </div>
+        )}
       </div>
     </nav>
   );

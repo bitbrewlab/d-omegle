@@ -25,6 +25,8 @@ export default function Peer2() {
   let peerConnection = useRef<RTCPeerConnection>();
   let sessionObject = useRef<any>(null);
 
+  let Timer: string | number | NodeJS.Timeout | undefined;
+
   const navigation = useNavigate();
 
   const detectKeyDownEvent = (e: any) => {
@@ -40,6 +42,10 @@ export default function Peer2() {
     }
   };
 
+  const startTimer = async () => {
+    Timer = setTimeout(onSessionEnd, 120000);
+  };
+
   useEffect(() => {
     peerConnectionStatus();
 
@@ -47,7 +53,9 @@ export default function Peer2() {
 
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
-    socket.on("activeUser", (data) => console.log(data));
+    socket.on("activeUser", () =>
+      socket.emit("changeSession", sessionObject.current)
+    );
 
     // webRTC peer connection events
     socket.on("createOffer", (data) => onOffer(data));
@@ -95,6 +103,8 @@ export default function Peer2() {
   };
 
   const onOffer = async (data: any) => {
+    startTimer();
+
     const offer = await peerConnection.current!.createOffer({
       iceRestart: true,
     });
@@ -111,6 +121,8 @@ export default function Peer2() {
   };
 
   const onAnswer = async (data: any) => {
+    startTimer();
+
     peerConnection.current?.setRemoteDescription(data.offer);
 
     const answer = await peerConnection.current?.createAnswer();
@@ -146,6 +158,7 @@ export default function Peer2() {
 
   const onCandidatesRecive = (data: any) => {
     const candidate = new RTCIceCandidate(data);
+
     peerConnection.current
       ?.addIceCandidate(candidate)
       .then(() => {})
@@ -162,6 +175,7 @@ export default function Peer2() {
 
   const exitToPlatform = async () => {
     socket.emit("changeSession", sessionObject.current);
+    clearTimeout(Timer);
     await localStream.getTracks().forEach((track) => track.stop());
     await localStream.getTracks().forEach((track) => (track.enabled = false));
 
@@ -183,7 +197,7 @@ export default function Peer2() {
             autoPlay
             muted
             playsInline
-            className="rounded-2xl object-cover w-96 h-72"
+            className="rounded-2xl object-cover w-96 h-72 "
           />
         </div>
         <div className=" shadow-lg rounded-2xl saturate-150 w-max">
