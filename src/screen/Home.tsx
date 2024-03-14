@@ -1,10 +1,10 @@
-// import { polygonZkEvmTestnet } from "wagmi/chains";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+// import { polygonZkEvmTestnet } from "wagmi/chains";
 // import { useAccount, useConnect, useSwitchChain } from "wagmi";
 // import { injected } from "wagmi/connectors";
-import { Link } from "react-router-dom";
 
 export default function Home() {
   // const account = useAccount();
@@ -40,10 +40,10 @@ export default function Home() {
   // };
 
   return (
-    <section className="bg-gray-50 heroBackground h-dvh">
+    <section className="bg-gray-50 heroBackground h-screen">
       <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
-        <div className="mx-auto text-center bg-white px-12 py-5 rounded-2xl border-2 border-black">
-          <h1 className="text-3xl font-extrabold sm:text-5xl">
+        <div className="mx-auto text-center bg-white px-5 md:px-12 py-5 rounded-2xl border-2 border-black">
+          <h1 className="text-2xl font-extrabold sm:text-5xl">
             😂 Welcome to Domegle.
             <strong className="font-extrabold text-[#4d648d] sm:block">
               peer-to-peer video chat.
@@ -68,7 +68,7 @@ export default function Home() {
 
           <div className="mt-5">
             <p className="font-bold underline">For More Peace 😇</p>
-            <ul className="list-outside">
+            <ul className="list-outside text-sm">
               <li>
                 Hit the <span className="bg-gray-200 px-1">Esc</span> key to
                 bail on this session like it's a bad date.

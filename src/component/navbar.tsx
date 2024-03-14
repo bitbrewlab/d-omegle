@@ -20,12 +20,15 @@ export default function Navbar() {
           <ul className="justify-center items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
             {navigation.map((item, idx) => {
               return (
-                <li key={idx} className="text-gray-600 hover:text-indigo-600">
+                <li
+                  key={idx}
+                  className="text-gray-600 hover:text-indigo-600 text-sm"
+                >
                   <a href={item.path}>{item.title}</a>
                 </li>
               );
             })}
-            <li key="exit" className="text-gray-600 hover:text-red-600">
+            <li key="exit" className="text-gray-600 hover:text-red-600 text-sm">
               <button onClick={() => console.log("Retuen request")}>
                 Return Stack
               </button>
