@@ -73,6 +73,7 @@ export default function Peer2() {
     return () => {
       peerConnection.current?.close();
       socket.disconnect();
+      console.log("Timer Stoped");
       clearTimeout(Timer);
       peerConnectionStatus();
     };
@@ -153,7 +154,6 @@ export default function Peer2() {
     if (peerConnection.current) {
       peerConnection.current.onicecandidate = (event) => {
         if (event.candidate) {
-          console.log(event.candidate);
           socket.emit("exchangeCandidates", {
             remoteSocketId: sessionObject.current.remoteUserSocketID,
             candidate: event.candidate.toJSON(),
@@ -175,6 +175,7 @@ export default function Peer2() {
   const onSessionEnd = () => {
     remoteStream.getTracks().forEach((track) => track.stop());
     remoteStream.getTracks().forEach((track) => (track.enabled = false));
+    console.log("Timer Stoped");
     clearTimeout(Timer);
     peerConnection.current?.close();
     socket.disconnect();
@@ -183,6 +184,7 @@ export default function Peer2() {
 
   const exitToPlatform = async () => {
     socket.emit("changeSession", sessionObject.current);
+    console.log("Timer Stoped");
     clearTimeout(Timer);
     await localStream.getTracks().forEach((track) => track.stop());
     await localStream.getTracks().forEach((track) => (track.enabled = false));
