@@ -58,7 +58,7 @@ export default function Home() {
           </div>
 
           <div className="my-5">
-            <Link to={"/session"}>
+            <Link to={"session"}>
               <button className="bg-black text-white px-5 py-3 rounded-xl">
                 Let's talk with strangers
                 <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
