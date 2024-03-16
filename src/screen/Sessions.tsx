@@ -32,8 +32,6 @@ export default function Peer2() {
   let sessionObject = useRef<any>(null);
 
   let Timer: string | number | NodeJS.Timeout | undefined;
-  let [seconds, setSeconds] = useState(0);
-  let [min, setMin] = useState(2);
 
   const navigation = useNavigate();
 
@@ -52,14 +50,6 @@ export default function Peer2() {
 
   const startTimer = async () => {
     Timer = setTimeout(onSessionEnd, 120000);
-    Interval = setInterval(() => {
-      if (seconds === 0) {
-        setSeconds(59);
-        setMin(min - 1);
-      } else {
-        setSeconds(seconds - 1);
-      }
-    }, 1000);
   };
 
   useEffect(() => {
@@ -258,11 +248,6 @@ export default function Peer2() {
             playsInline
             className="md:rounded-2xl object-cover h-dvh md:w-96 md:h-96 shadow-lg"
           />
-        </div>
-
-        {/* Timer */}
-        <div>
-          {Math.floor(min)}:{Math.floor(seconds)}
         </div>
       </div>
 
