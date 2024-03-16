@@ -19,10 +19,10 @@ After forking, you'll work on your copy of the repository. Later, you can submit
 
 To work on the project, clone the repository to your local machine. If you've forked the repository, make sure to clone your fork.
 
-\```bash
+```bash
 git clone https://github.com/yourusername/domegle.git
 cd domegle
-\```
+```
 
 Replace `yourusername` with your GitHub username.
 
@@ -30,12 +30,12 @@ Replace `yourusername` with your GitHub username.
 
 Before making any changes, set up the project's development environment:
 
-\```bash
+```bash
 
 # Install the necessary dependencies
 
 npm install
-\```
+```
 
 Ensure you have Node.js and npm installed on your local machine before running the command above.
 
@@ -43,9 +43,9 @@ Ensure you have Node.js and npm installed on your local machine before running t
 
 Our workflow requires that all changes be made in a feature branch labeled with a ticket number. To create a new feature branch:
 
-\```bash
+```bash
 git checkout -b feature/<ticket-number>
-\```
+```
 
 Replace `<ticket-number>` with the actual ticket number associated with the task you're working on.
 
@@ -60,9 +60,9 @@ With your environment set up and your feature branch ready, you're all set to st
 
 Once you've completed your changes:
 
-\```bash
+```bash
 git push origin feature/<ticket-number>
-\```
+```
 
 Then, go to the GitHub page of the original repository (or your fork, if you're not a team member) and create a new pull request. Make sure to:
 
