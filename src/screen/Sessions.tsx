@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +32,9 @@ export default function Peer2() {
   let sessionObject = useRef<any>(null);
 
   let Timer: string | number | NodeJS.Timeout | undefined;
+  let Interval;
+  let [seconds, setSeconds] = useState(0);
+  let [min, setMin] = useState(2);
 
   const navigation = useNavigate();
 
@@ -50,6 +53,14 @@ export default function Peer2() {
 
   const startTimer = async () => {
     Timer = setTimeout(onSessionEnd, 120000);
+    Interval = setInterval(() => {
+      if (seconds === 0) {
+        setSeconds(59);
+        setMin(min - 1);
+      } else {
+        setSeconds(seconds - 1);
+      }
+    }, 1000);
   };
 
   useEffect(() => {
@@ -233,20 +244,27 @@ export default function Peer2() {
       <div className="hidden md:block">
         <Navbar />
       </div>
-      <div className="saturate-150 flex flex-col md:flex-row justify-center items-center md:mt-16 gap-5">
-        <video
-          ref={localVideoRef}
-          autoPlay
-          muted
-          playsInline
-          className="rounded-2xl object-cover w-1/4 h-1/6 md:w-96 md:h-96 absolute bottom-5 right-5 md:sticky shadow-lg"
-        />
-        <video
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
-          className="md:rounded-2xl object-cover h-dvh md:w-96 md:h-96 shadow-lg"
-        />
+      <div className="flex flex-col justify-center items-center gap-5">
+        <div className="saturate-150 flex flex-col md:flex-row md:mt-14 gap-5">
+          <video
+            ref={localVideoRef}
+            autoPlay
+            muted
+            playsInline
+            className="rounded-2xl object-cover w-1/4 h-1/6 md:w-96 md:h-96 absolute bottom-5 right-5 md:sticky shadow-lg"
+          />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="md:rounded-2xl object-cover h-dvh md:w-96 md:h-96 shadow-lg"
+          />
+        </div>
+
+        {/* Timer */}
+        <div>
+          {Math.floor(min)}:{Math.floor(seconds)}
+        </div>
       </div>
 
       <div className="absolute bottom-5 w-screen md:flex md:flex-col justify-center items-center hidden ">
