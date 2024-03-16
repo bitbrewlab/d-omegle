@@ -32,7 +32,6 @@ export default function Peer2() {
   let sessionObject = useRef<any>(null);
 
   let Timer: string | number | NodeJS.Timeout | undefined;
-  let Interval;
   let [seconds, setSeconds] = useState(0);
   let [min, setMin] = useState(2);
 
