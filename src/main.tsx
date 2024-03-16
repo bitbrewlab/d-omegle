@@ -8,6 +8,8 @@ import Home from "./screen/Home.tsx";
 import Peer2 from "./screen/Sessions.tsx";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import React from "react";
+import NotFound from "./screen/NotFound.tsx";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +17,7 @@ const Router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <NotFound />,
     children: [
       { path: "/", element: <Home /> },
       { path: "session", element: <Peer2 /> },
@@ -23,9 +26,11 @@ const Router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <WagmiProvider config={config}>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={Router} />
-    </QueryClientProvider>
-  </WagmiProvider>
+  <React.StrictMode>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={Router} />
+      </QueryClientProvider>
+    </WagmiProvider>
+  </React.StrictMode>
 );

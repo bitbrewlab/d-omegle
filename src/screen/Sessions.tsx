@@ -233,20 +233,22 @@ export default function Peer2() {
       <div className="hidden md:block">
         <Navbar />
       </div>
-      <div className="saturate-150 flex flex-col md:flex-row justify-center items-center md:mt-16 gap-5">
-        <video
-          ref={localVideoRef}
-          autoPlay
-          muted
-          playsInline
-          className="rounded-2xl object-cover w-1/4 h-1/6 md:w-96 md:h-96 absolute bottom-5 right-5 md:sticky shadow-lg"
-        />
-        <video
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
-          className="md:rounded-2xl object-cover h-dvh md:w-96 md:h-96 shadow-lg"
-        />
+      <div className="flex flex-col justify-center items-center gap-5">
+        <div className="saturate-150 flex flex-col md:flex-row md:mt-14 gap-5">
+          <video
+            ref={localVideoRef}
+            autoPlay
+            muted
+            playsInline
+            className="rounded-2xl object-cover w-1/4 h-1/6 md:w-96 md:h-96 absolute bottom-5 right-5 md:sticky shadow-lg"
+          />
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
+            className="md:rounded-2xl object-cover h-dvh md:w-96 md:h-96 shadow-lg"
+          />
+        </div>
       </div>
 
       <div className="absolute bottom-5 w-screen md:flex md:flex-col justify-center items-center hidden ">
