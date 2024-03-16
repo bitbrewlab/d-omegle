@@ -7,17 +7,13 @@ import App from "./App.tsx";
 import Home from "./screen/Home.tsx";
 import Peer2 from "./screen/Sessions.tsx";
 
-import {
-  RouterProvider,
-  // createBrowserRouter,
-  createHashRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import React from "react";
 import NotFound from "./screen/NotFound.tsx";
 
 const queryClient = new QueryClient();
 
-const hashRoute = createHashRouter([
+const Router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
@@ -29,23 +25,11 @@ const hashRoute = createHashRouter([
   },
 ]);
 
-// const Router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <App />,
-//     errorElement: <NotFound />,
-//     children: [
-//       { path: "/", element: <Home /> },
-//       { path: "session", element: <Peer2 /> },
-//     ],
-//   },
-// ]);
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={hashRoute} />
+        <RouterProvider router={Router} />
       </QueryClientProvider>
     </WagmiProvider>
   </React.StrictMode>
