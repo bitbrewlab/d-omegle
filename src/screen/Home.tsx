@@ -1,10 +1,9 @@
+import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
-// import { polygonZkEvmTestnet } from "wagmi/chains";
-// import { useAccount, useConnect, useSwitchChain } from "wagmi";
-// import { injected } from "wagmi/connectors";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Home() {
   // const account = useAccount();
@@ -39,6 +38,15 @@ export default function Home() {
   //   console.log("check stack");
   // };
 
+  const { open } = useWeb3Modal();
+  const navigate = useNavigate();
+
+  const connectWallet = async () => {
+    console.log("wallet connection here");
+    await open({ view: "Networks" });
+    navigate("session");
+  };
+
   return (
     <section className="bg-gray-50 heroBackground h-screen">
       <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
@@ -57,13 +65,21 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="my-5">
+          <div className="my-5 flex gap-3 justify-center items-center">
             <Link to={"session"}>
               <button className="bg-black text-white px-5 py-3 rounded-xl">
-                Let's talk with strangers
+                Free tier
                 <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
               </button>
             </Link>
+
+            <button
+              className="bg-black text-white px-5 py-3 rounded-xl"
+              onClick={connectWallet}
+            >
+              Stack token
+              <FontAwesomeIcon icon={faBitcoin} className="ml-3" />
+            </button>
           </div>
 
           <div className="mt-5">
@@ -75,7 +91,13 @@ export default function Home() {
               </li>
               <li>
                 Got some words of wisdom or a funny quip about our awkward
-                phase? Drop your feedback like it's hot.
+                phase? Drop your{" "}
+                <span className="font-bold">
+                  <Link to="https://3dzv780u81j.typeform.com/to/dcaoQ8yG">
+                    feedback
+                  </Link>
+                </span>{" "}
+                like it's hot.
               </li>
             </ul>
           </div>
