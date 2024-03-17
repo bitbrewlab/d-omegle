@@ -3,7 +3,7 @@ import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAccount } from "wagmi";
 
 export default function Home() {
@@ -40,7 +40,7 @@ export default function Home() {
   // };
 
   const { open } = useWeb3Modal();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const account = useAccount();
 
   const connectWallet = async () => {
