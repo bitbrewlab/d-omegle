@@ -28,8 +28,13 @@ const config = defaultWagmiConfig({
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
+  themeMode: "light",
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
+  featuredWalletIds: [
+    "c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96",
+  ],
+  allWallets: "ONLY_MOBILE",
 });
 
 export function Web3ModalProvider({ children }: { children: React.ReactNode }) {
