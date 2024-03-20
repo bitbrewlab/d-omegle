@@ -1,5 +1,5 @@
 import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
-import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
+import { faDoorOpen, faIdBadge } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useEffect } from "react";
@@ -70,18 +70,26 @@ export default function Home() {
 
           <div className="my-5 flex gap-3 justify-center items-center">
             <Link to={"session"}>
-              <button className="bg-black text-white px-5 py-3 rounded-xl">
+              <button className="bg-black text-white px-5 py-3 rounded-xl border-2 border-gray-500">
                 Free tier
                 <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
               </button>
             </Link>
 
             <button
-              className="bg-black text-white px-5 py-3 rounded-xl"
+              className="bg-[#ff9900] text-black border-2 border-black px-5 py-3 rounded-xl"
               onClick={connectWallet}
             >
               Stack token
               <FontAwesomeIcon icon={faBitcoin} className="ml-3" />
+            </button>
+
+            <button
+              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white border-2 border-black  px-5 py-3 rounded-xl"
+              onClick={() => {}}
+            >
+              NFT pack
+              <FontAwesomeIcon icon={faIdBadge} className="ml-3" />
             </button>
           </div>
 
