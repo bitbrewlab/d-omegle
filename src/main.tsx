@@ -10,6 +10,9 @@ import NotFound from "./screen/NotFound.tsx";
 import Peer2 from "./screen/Sessions.tsx";
 import { Web3ModalProvider } from "./service/web3model.conf.tsx";
 
+import { Provider } from "react-redux";
+import { store } from "./redux/store.ts";
+
 // route configration
 const Router = createBrowserRouter([
   {
@@ -25,6 +28,8 @@ const Router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Web3ModalProvider children={<RouterProvider router={Router} />} />
+    <Provider store={store}>
+      <Web3ModalProvider children={<RouterProvider router={Router} />} />
+    </Provider>
   </React.StrictMode>
 );

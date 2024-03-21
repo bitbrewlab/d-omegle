@@ -58,12 +58,14 @@ export default function Peer2() {
   useEffect(() => {
     peerConnectionStatus();
 
+    console.log("peer loaded");
+
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
     socket.on("activeUser", () =>
-      socket.emit("changeSession", sessionObject.current)
+      socket.emit("changeSession", sessionObject.current as any)
     );
 
     // webRTC peer connection events
@@ -83,6 +85,7 @@ export default function Peer2() {
   }, [peerConnection.current?.signalingState]);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
+    console.log("socket connected");
     sessionObject.current = _socket;
 
     peerConnection.current = new RTCPeerConnection({
