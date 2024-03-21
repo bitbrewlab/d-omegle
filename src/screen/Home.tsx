@@ -85,7 +85,7 @@ export default function Home() {
             </button>
 
             <button
-              className="bg-[#615b54] text-black border-2 border-black px-5 py-2 rounded-xl"
+              className="bg-[#f2a900] text-black border-2 border-black px-5 py-2 rounded-xl"
               onClick={() => dispatch(walletConnect())}
             >
               Stack token
