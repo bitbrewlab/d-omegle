@@ -1,18 +1,19 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { config } from "./service/wagmi.conf.tsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider } from "wagmi";
-import App from "./App.tsx";
-import Home from "./screen/Home.tsx";
-import Peer2 from "./screen/Sessions.tsx";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
 import React from "react";
+import App from "./App.tsx";
+import Home from "./screen/Home.tsx";
 import NotFound from "./screen/NotFound.tsx";
+import Peer2 from "./screen/Sessions.tsx";
+import { Web3ModalProvider } from "./service/web3model.conf.tsx";
 
-const queryClient = new QueryClient();
+import { Provider } from "react-redux";
+import { store } from "./redux/store.ts";
 
+// route configration
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -27,10 +28,8 @@ const Router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={Router} />
-      </QueryClientProvider>
-    </WagmiProvider>
+    <Provider store={store}>
+      <Web3ModalProvider children={<RouterProvider router={Router} />} />
+    </Provider>
   </React.StrictMode>
 );

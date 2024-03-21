@@ -1,4 +1,7 @@
 import { useAccount } from "wagmi";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { useEffect } from "react";
 
 export default function Navbar() {
   const navigation = [
@@ -7,6 +10,13 @@ export default function Navbar() {
   ];
 
   const account = useAccount();
+  const userState = useSelector((state: RootState) => {
+    return state.domegleData; // Add 'return' statement to return the state
+  });
+
+  useEffect(() => {
+    console.log(userState); // Access 'wallet' property only if 'userState' exists
+  }, []);
 
   return (
     <nav className=" w-full border-b md:border-0 md:static">
@@ -35,13 +45,17 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
-        {account.address && (
+        {account.address ? (
           <div className="md:flex gap-3 items-center hidden">
             <p>
               {account.address?.slice(0, 8) +
                 "..." +
                 account.address?.slice(-4)}
             </p>
+          </div>
+        ) : (
+          <div className="md:flex gap-3 items-center hidden">
+            <p>{userState.wallet?.address}</p>
           </div>
         )}
       </div>

@@ -1,10 +1,13 @@
-import { faDoorOpen } from "@fortawesome/free-solid-svg-icons/faDoorOpen";
+import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
+import { faDoorOpen, faIdBadge } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { useWeb3Modal } from "@web3modal/wagmi/react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-// import { polygonZkEvmTestnet } from "wagmi/chains";
-// import { useAccount, useConnect, useSwitchChain } from "wagmi";
-// import { injected } from "wagmi/connectors";
+// import { useAccount } from "wagmi";
+
+import { useDispatch } from "react-redux";
+import { GuestEntry, walletConnect } from "../redux/features/domegleDataSlice";
 
 export default function Home() {
   // const account = useAccount();
@@ -30,6 +33,8 @@ export default function Home() {
   //   });
   // };
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     document.title = "D-omegle";
     // checkNetwork();
@@ -37,6 +42,17 @@ export default function Home() {
 
   // const checkStack = () => {
   //   console.log("check stack");
+  // };
+
+  // const { open } = useWeb3Modal();
+  // const navigate = useNavigate();
+  // const account = useAccount();
+
+  // const connectWallet = async () => {
+  //   console.log("wallet connection here");
+  //   await open();
+  //   // navigate("session");
+  //   console.log(account);
   // };
 
   return (
@@ -57,13 +73,32 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="my-5">
-            <Link to={"session"}>
-              <button className="bg-black text-white px-5 py-3 rounded-xl">
-                Let's talk with strangers
-                <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
-              </button>
-            </Link>
+          <div className="my-5 flex gap-3 justify-center items-center">
+            <button
+              className="bg-black text-white px-5 py-2 rounded-xl border-2 border-gray-500"
+              onClick={() => {
+                dispatch(GuestEntry());
+              }}
+            >
+              Free tier
+              <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
+            </button>
+
+            <button
+              className="bg-[#f2a900] text-black border-2 border-black px-5 py-2 rounded-xl"
+              onClick={() => dispatch(walletConnect())}
+            >
+              Stack token
+              <FontAwesomeIcon icon={faBitcoin} className="ml-3" />
+            </button>
+
+            <button
+              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white border-2 border-black  px-5 py-2 rounded-xl"
+              onClick={() => {}}
+            >
+              NFT pack
+              <FontAwesomeIcon icon={faIdBadge} className="ml-3" />
+            </button>
           </div>
 
           <div className="mt-5">
@@ -75,7 +110,13 @@ export default function Home() {
               </li>
               <li>
                 Got some words of wisdom or a funny quip about our awkward
-                phase? Drop your feedback like it's hot.
+                phase? Drop your{" "}
+                <span className="font-bold">
+                  <Link to="https://3dzv780u81j.typeform.com/to/dcaoQ8yG">
+                    feedback
+                  </Link>
+                </span>{" "}
+                like it's hot.
               </li>
             </ul>
           </div>

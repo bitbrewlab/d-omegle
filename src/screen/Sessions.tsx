@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightFromBracket,
@@ -9,6 +9,7 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../component/navbar";
+import { useDisconnect } from "wagmi";
 
 export default function Peer2() {
   // ___For Production___
@@ -33,7 +34,9 @@ export default function Peer2() {
 
   let Timer: string | number | NodeJS.Timeout | undefined;
 
-  const navigation = useNavigate();
+  const { disconnect } = useDisconnect();
+
+  // const navigation = useNavigate();
 
   const detectKeyDownEvent = (e: any) => {
     if (e.code === "Escape") {
@@ -55,12 +58,14 @@ export default function Peer2() {
   useEffect(() => {
     peerConnectionStatus();
 
+    console.log("peer loaded");
+
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
     // socket connection & disconnection
     socket.on("connected", (socket) => onConnected(socket));
     socket.on("activeUser", () =>
-      socket.emit("changeSession", sessionObject.current)
+      socket.emit("changeSession", sessionObject.current as any)
     );
 
     // webRTC peer connection events
@@ -80,6 +85,7 @@ export default function Peer2() {
   }, [peerConnection.current?.signalingState]);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
+    console.log("socket connected");
     sessionObject.current = _socket;
 
     peerConnection.current = new RTCPeerConnection({
@@ -186,15 +192,22 @@ export default function Peer2() {
     socket.emit("changeSession", sessionObject.current);
     console.log("Timer Stoped");
     clearTimeout(Timer);
-    await localStream.getTracks().forEach((track) => track.stop());
-    await localStream.getTracks().forEach((track) => (track.enabled = false));
 
-    await remoteStream.getTracks().forEach((track) => track.stop());
-    await remoteStream.getTracks().forEach((track) => (track.enabled = false));
+    if (localStream) {
+      await localStream.getTracks().forEach((track) => track.stop());
+      await localStream.getTracks().forEach((track) => (track.enabled = false));
+    }
+
+    if (remoteStream) {
+      await remoteStream.getTracks().forEach((track) => track.stop());
+      await remoteStream
+        .getTracks()
+        .forEach((track) => (track.enabled = false));
+    }
     peerConnection.current?.close();
     socket.disconnect();
 
-    navigation("/");
+    await disconnect();
   };
 
   return (
