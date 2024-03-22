@@ -10,6 +10,8 @@ import {
 import Navbar from "../component/navbar";
 import { useDisconnect } from "wagmi";
 
+import Logo from "../assets/eng_logo.svg";
+
 export default function Peer2() {
   // ___For Production___
   const socket = io("https://socket.0xdomegle.com");
@@ -257,24 +259,23 @@ export default function Peer2() {
         <p>@Developed by BitsBrewLab with ❤️</p>
       </div>
 
-      <div className="z-10 absolute bottom-5 ml-5 md:right-5 flex flex-col items-center ">
-        <h1 className="text-lg text-black/50 font-bold md:hidden mb-2">
-          0xDomegle.com
-        </h1>
-        <div className=" bg-slate-100/400  py-3 px-8 flex gap-7 rounded-full text-xl shadow-lg border-2 border-black border-spacing-20">
-          <button>
-            <FontAwesomeIcon icon={faMessage} />
-          </button>
-          <button onClick={onSessionEnd}>
-            <FontAwesomeIcon icon={faDice} />
-          </button>
-          <button onClick={exitToPlatform}>
-            <FontAwesomeIcon
-              icon={faArrowRightFromBracket}
-              className="text-red-500"
-            />
-          </button>
-        </div>
+      <div className="absolute top-5 w-screen flex justify-center items-center">
+        <img src={Logo} alt="0xdomegle.com" className="w-1/2" />
+      </div>
+
+      <div className="z-10 absolute bottom-5 ml-5 md:right-5 bg-white  py-3 px-8 flex gap-7 rounded-full text-xl shadow-lg border-2 border-black border-spacing-20">
+        <button>
+          <FontAwesomeIcon icon={faMessage} />
+        </button>
+        <button onClick={onSessionEnd}>
+          <FontAwesomeIcon icon={faDice} />
+        </button>
+        <button onClick={exitToPlatform}>
+          <FontAwesomeIcon
+            icon={faArrowRightFromBracket}
+            className="text-red-500"
+          />
+        </button>
       </div>
     </div>
 
