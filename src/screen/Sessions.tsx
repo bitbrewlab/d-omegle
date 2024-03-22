@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useAccount } from "wagmi";
 import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,8 +11,6 @@ import Navbar from "../component/navbar";
 import { useDisconnect } from "wagmi";
 
 import Logo from "../assets/eng_logo.svg";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 
 export default function Peer2() {
   // ___For Production___
@@ -21,11 +18,6 @@ export default function Peer2() {
 
   // ___For Local Development___
   // const socket = io("http://localhost:1629");
-
-  const account = useAccount();
-  const userState = useSelector((state: RootState) => {
-    return state.domegleData; // Add 'return' statement to return the state
-  });
 
   const constraints = {
     video: true,
