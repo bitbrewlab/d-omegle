@@ -1,59 +1,13 @@
 import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
 import { faDoorOpen, faIdBadge } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-// import { useAccount } from "wagmi";
 
 import { useDispatch } from "react-redux";
 import { GuestEntry, walletConnect } from "../redux/features/domegleDataSlice";
 
 export default function Home() {
-  // const account = useAccount();
-  // const { connect } = useConnect();
-  // const { switchChain } = useSwitchChain();
-
-  // const checkNetwork = async () => {
-  //   await window.ethereum.request({
-  //     method: "wallet_addEthereumChain",
-  //     params: [
-  //       {
-  //         chainId: "0x5a2",
-  //         chainName: "Polygon zkEVM Testnet",
-  //         rpcUrls: ["https://rpc.public.zkevm-test.net"],
-  //         nativeCurrency: {
-  //           name: "ETH",
-  //           symbol: "ETH",
-  //           decimals: 18,
-  //         },
-  //         blockExplorerUrls: ["https://explorer.public.zkevm-test.net"],
-  //       },
-  //     ],
-  //   });
-  // };
-
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    document.title = "D-omegle";
-    // checkNetwork();
-  });
-
-  // const checkStack = () => {
-  //   console.log("check stack");
-  // };
-
-  // const { open } = useWeb3Modal();
-  // const navigate = useNavigate();
-  // const account = useAccount();
-
-  // const connectWallet = async () => {
-  //   console.log("wallet connection here");
-  //   await open();
-  //   // navigate("session");
-  //   console.log(account);
-  // };
 
   return (
     <section className="bg-gray-50 heroBackground h-screen">
@@ -73,9 +27,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="my-5 flex gap-3 justify-center items-center">
+          <div className="my-5 flex flex-col md:flex-row gap-3 justify-center items-center">
             <button
-              className="bg-black text-white px-5 py-2 rounded-xl border-2 border-gray-500"
+              className="bg-black text-white px-5 py-2 rounded-xl border-2 border-gray-500 w-full"
               onClick={() => {
                 dispatch(GuestEntry());
               }}
@@ -85,7 +39,7 @@ export default function Home() {
             </button>
 
             <button
-              className="bg-[#f2a900] text-black border-2 border-black px-5 py-2 rounded-xl"
+              className="bg-[#f2a900] text-black border-2 border-black px-5 py-2 rounded-xl w-full"
               onClick={() => dispatch(walletConnect())}
             >
               Stack token
@@ -93,7 +47,7 @@ export default function Home() {
             </button>
 
             <button
-              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white border-2 border-black  px-5 py-2 rounded-xl"
+              className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white border-2 border-black  px-5 py-2 rounded-xl w-full"
               onClick={() => {}}
             >
               NFT pack

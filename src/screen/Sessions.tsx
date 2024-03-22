@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
-// import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightFromBracket,
@@ -36,18 +35,10 @@ export default function Peer2() {
 
   const { disconnect } = useDisconnect();
 
-  // const navigation = useNavigate();
-
   const detectKeyDownEvent = (e: any) => {
     if (e.code === "Escape") {
       socket.emit("changeSession", sessionObject.current);
       onSessionEnd();
-    }
-  };
-
-  const peerConnectionStatus = async () => {
-    if (peerConnection.current) {
-      console.log(peerConnection.current.signalingState);
     }
   };
 
@@ -56,10 +47,6 @@ export default function Peer2() {
   };
 
   useEffect(() => {
-    peerConnectionStatus();
-
-    console.log("peer loaded");
-
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
     // socket connection & disconnection
@@ -80,7 +67,6 @@ export default function Peer2() {
       socket.disconnect();
       console.log("Timer Stoped");
       clearTimeout(Timer);
-      peerConnectionStatus();
     };
   }, [peerConnection.current?.signalingState]);
 
@@ -271,19 +257,24 @@ export default function Peer2() {
         <p>@Developed by BitsBrewLab with ❤️</p>
       </div>
 
-      <div className="z-10 absolute bottom-5 ml-5 md:right-5 bg-white py-3 px-8 flex gap-7 rounded-full text-xl shadow-lg border-2 border-black border-spacing-20">
-        <button>
-          <FontAwesomeIcon icon={faMessage} />
-        </button>
-        <button onClick={onSessionEnd}>
-          <FontAwesomeIcon icon={faDice} />
-        </button>
-        <button onClick={exitToPlatform}>
-          <FontAwesomeIcon
-            icon={faArrowRightFromBracket}
-            className="text-red-500"
-          />
-        </button>
+      <div className="z-10 absolute bottom-5 ml-5 md:right-5 flex flex-col items-center ">
+        <h1 className="text-lg text-black/50 font-bold md:hidden mb-2">
+          0xDomegle.com
+        </h1>
+        <div className=" bg-slate-100/400  py-3 px-8 flex gap-7 rounded-full text-xl shadow-lg border-2 border-black border-spacing-20">
+          <button>
+            <FontAwesomeIcon icon={faMessage} />
+          </button>
+          <button onClick={onSessionEnd}>
+            <FontAwesomeIcon icon={faDice} />
+          </button>
+          <button onClick={exitToPlatform}>
+            <FontAwesomeIcon
+              icon={faArrowRightFromBracket}
+              className="text-red-500"
+            />
+          </button>
+        </div>
       </div>
     </div>
 

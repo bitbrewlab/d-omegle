@@ -13,7 +13,6 @@ import { Web3ModalProvider } from "./service/web3model.conf.tsx";
 import { Provider } from "react-redux";
 import { store } from "./redux/store.ts";
 
-// route configration
 const Router = createBrowserRouter([
   {
     path: "/",
