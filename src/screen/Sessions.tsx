@@ -199,37 +199,6 @@ export default function Peer2() {
   };
 
   return (
-    // <div>
-    //   <Navbar />
-    //   <div className="flex flex-col md:flex-row gap-5 justify-center items-center my-10">
-    //     <div className="shadow-lg rounded-2xl saturate-150 w-max">
-    //       <video
-    //         ref={localVideoRef}
-    //         autoPlay
-    //         muted
-    //         playsInline
-    //         className="rounded-2xl object-cover w-96 h-72 "
-    //       />
-    //     </div>
-    //     <div className=" shadow-lg rounded-2xl saturate-150 w-max">
-    //       <video
-    //         ref={remoteVideoRef}
-    //         autoPlay
-    //         playsInline
-    //         className="w-96 h-72 object-cover rounded-2xl"
-    //       />
-    //     </div>
-    //   </div>
-    //   <div className="w-full hidden lg:flex absolute bottom-0 py-5 px-10 justify-center items-center">
-    //     <p>@Developed by BitsBrewLab with ❤️</p>
-    //     <button
-    //       className="text-white bg-red-500 py-3 px-8 font-bold rounded-lg absolute right-10 bottom-5"
-    //       onClick={exitToPlatform}
-    //     >
-    //       Disconnect
-    //     </button>
-    //   </div>
-    // </div>
     <div className="max-h-dvh">
       <div className="hidden md:block">
         <Navbar />
@@ -278,43 +247,5 @@ export default function Peer2() {
         </button>
       </div>
     </div>
-
-    // <div className="h-svh relative ">
-    //   <div className="hidden md:block">
-    //     <Navbar />
-    //   </div>
-    //   <div className="md:w-screen md:flex md:justify-center md:gap-5 md:mt-12 md:px-12">
-    //     <video
-    //       ref={localVideoRef}
-    //       autoPlay
-    //       muted
-    //       playsInline
-    //       className="rounded-2xl object-cover absolute w-1/4 h-1/6 bottom-5 right-5 z-10 shadow-lg saturate-150 md:static md:max-w-80 md:max-h-96"
-    //     />
-
-    //     <div className="md:max-w-80 md:max-h-96 md:rounded-2xl shadow-lg">
-    //       <video
-    //         ref={remoteVideoRef}
-    //         autoPlay
-    //         playsInline
-    //         className="w-full h-dvh object-cover saturate-150 md:static md:max-w-80 md:max-h-96 md:rounded-2xl shadow-lg"
-    //       />
-    //     </div>
-    //   </div>
-
-    //   <div className="absolute bottom-5 left-5 flex justify-center items-center gap-5 md:w-screen">
-    //     <button onClick={exitToPlatform}>
-    //       <div className="bg-red-500 text-white text-xl p-3 rounded-lg w-14 h-14 flex justify-center items-center shadow-lg">
-    //         <FontAwesomeIcon icon={faArrowRightFromBracket} />
-    //       </div>
-    //     </button>
-
-    //     <button onClick={onSessionEnd}>
-    //       <div className="bg-white text-black text-xl p-3 rounded-lg w-14 h-14 flex justify-center items-center shadow-lg">
-    //         <FontAwesomeIcon icon={faDice} />
-    //       </div>
-    //     </button>
-    //   </div>
-    // </div>
   );
 }
