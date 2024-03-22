@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useAccount } from "wagmi";
 import { io } from "socket.io-client";
 import { iceSercer } from "../service/peer.config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +12,8 @@ import Navbar from "../component/navbar";
 import { useDisconnect } from "wagmi";
 
 import Logo from "../assets/eng_logo.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export default function Peer2() {
   // ___For Production___
@@ -18,6 +21,11 @@ export default function Peer2() {
 
   // ___For Local Development___
   // const socket = io("http://localhost:1629");
+
+  const account = useAccount();
+  const userState = useSelector((state: RootState) => {
+    return state.domegleData; // Add 'return' statement to return the state
+  });
 
   const constraints = {
     video: true,
@@ -210,7 +218,7 @@ export default function Peer2() {
             autoPlay
             muted
             playsInline
-            className="rounded-2xl object-cover w-1/4 h-1/6 md:w-96 md:h-96 absolute bottom-5 right-5 md:sticky shadow-lg"
+            className="rounded-2xl object-cover w-1/4 h-1/6 md:w-96 md:h-96 absolute bottom-10 right-5 md:sticky shadow-lg"
           />
           <video
             ref={remoteVideoRef}
@@ -228,7 +236,7 @@ export default function Peer2() {
         <p>@Developed by BitsBrewLab with ❤️</p>
       </div>
 
-      <div className="absolute top-5 w-screen flex justify-center items-center">
+      <div className="absolute top-5 w-screen flex justify-center items-center md:hidden">
         <img src={Logo} alt="0xdomegle.com" className="w-1/2" />
       </div>
 
