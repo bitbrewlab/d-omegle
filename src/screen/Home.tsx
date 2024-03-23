@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
-import { GuestEntry, walletConnect } from "../redux/features/domegleDataSlice";
+import { GuestEntry } from "../redux/features/domegleDataSlice";
+import { WalletConnectButton } from "../component/coustom_wallet_button";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -38,13 +39,9 @@ export default function Home() {
               <FontAwesomeIcon icon={faDoorOpen} className="ml-3" />
             </button>
 
-            <button
-              className="bg-[#f2a900] text-black border-2 border-black px-5 py-2 rounded-xl w-full"
-              onClick={() => dispatch(walletConnect())}
-            >
-              Stack token
-              <FontAwesomeIcon icon={faBitcoin} className="ml-3" />
-            </button>
+            <div className="w-full">
+              <WalletConnectButton />
+            </div>
 
             <button
               className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white border-2 border-black  px-5 py-2 rounded-xl w-full"
