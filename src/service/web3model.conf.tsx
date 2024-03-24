@@ -41,6 +41,8 @@ const connector = connectorsForWallets(
   {
     appName: "Domegle",
     projectId,
+    appDescription: "Welcome to chill zone, It's more than just talk",
+    appUrl: "https://app.0xdomegle.com",
   }
 );
 
@@ -61,6 +63,7 @@ export function Web3ModalProvider({ children }: { children: React.ReactNode }) {
         <RainbowKitProvider
           modalSize="compact"
           initialChain={polygonZkEvmTestnet}
+          coolMode
         >
           {children}
         </RainbowKitProvider>

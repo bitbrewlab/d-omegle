@@ -2,6 +2,7 @@ import { useAccount } from "wagmi";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { useEffect } from "react";
+import CoustomAvatar from "../component/coustom_avatar";
 
 export default function Navbar() {
   const navigation = [
@@ -45,19 +46,24 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
-        {account.address ? (
-          <div className="md:flex gap-3 items-center hidden">
-            <p>
-              {account.address?.slice(0, 8) +
-                "..." +
-                account.address?.slice(-4)}
-            </p>
-          </div>
-        ) : (
-          <div className="md:flex gap-3 items-center hidden">
-            <p>{userState.wallet?.address}</p>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          <CoustomAvatar
+            address={account.address ?? userState.wallet?.address ?? ""}
+          />
+          {account.address ? (
+            <div className="md:flex gap-3 items-center hidden">
+              <p>
+                {account.address?.slice(0, 8) +
+                  "..." +
+                  account.address?.slice(-4)}
+              </p>
+            </div>
+          ) : (
+            <div className="md:flex gap-3 items-center hidden">
+              <p>{userState.wallet?.address}</p>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );
