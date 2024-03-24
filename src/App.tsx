@@ -5,9 +5,10 @@ import { useAccount } from "wagmi";
 
 import Peer2 from "./screen/Sessions";
 import Home from "./screen/Home";
+import { polygonZkEvmTestnet } from "wagmi/chains";
 
 export default function App() {
-  const { isConnected } = useAccount();
+  const account = useAccount();
 
   React.useEffect(() => {
     document.title = "D-omegle";
@@ -15,5 +16,10 @@ export default function App() {
 
   const useState = useSelector((state: RootState) => state.domegleData);
 
-  return useState.wallet?.address || isConnected ? <Peer2 /> : <Home />;
+  return useState.wallet?.address ||
+    account.chainId === polygonZkEvmTestnet.id ? (
+    <Peer2 />
+  ) : (
+    <Home />
+  );
 }
