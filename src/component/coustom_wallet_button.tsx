@@ -2,6 +2,7 @@ import { faBitcoin } from "@fortawesome/free-brands-svg-icons";
 import { faTowerCell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+
 export const WalletConnectButton = () => {
   return (
     <ConnectButton.Custom>
