@@ -11,6 +11,10 @@ import Navbar from "../component/navbar";
 import { useDisconnect } from "wagmi";
 
 import Logo from "../assets/eng_logo.svg";
+import {
+  useReadDomTokenName,
+  useReadStakingGetUserStakedAmount,
+} from "../generated";
 
 export default function Peer2() {
   // ___For Production___
@@ -48,6 +52,8 @@ export default function Peer2() {
     Timer = setTimeout(onSessionEnd, 120000);
   };
 
+  const { data } = useReadDomTokenName();
+
   useEffect(() => {
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
@@ -74,6 +80,7 @@ export default function Peer2() {
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
     console.log("socket connected");
+    console.log(data);
     sessionObject.current = _socket;
 
     peerConnection.current = new RTCPeerConnection({
