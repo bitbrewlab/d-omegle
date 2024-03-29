@@ -11,10 +11,7 @@ import Navbar from "../component/navbar";
 import { useDisconnect } from "wagmi";
 
 import Logo from "../assets/eng_logo.svg";
-import {
-  useReadDomTokenName,
-  useReadStakingGetUserStakedAmount,
-} from "../generated";
+import { useReadDomTokenName } from "../generated";
 
 export default function Peer2() {
   // ___For Production___
