@@ -3,116 +3,195 @@ import {
   createUseWriteContract,
   createUseSimulateContract,
   createUseWatchContractEvent,
-} from "wagmi/codegen";
+} from 'wagmi/codegen'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DomToken
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ */
 export const domTokenAbi = [
   {
-    type: "event",
+    type: 'constructor',
     inputs: [
-      { name: "owner", type: "address", indexed: true },
-      { name: "spender", type: "address", indexed: true },
-      { name: "value", type: "uint256", indexed: false },
+      { name: '_name', internalType: 'string', type: 'string' },
+      { name: '_symbol', internalType: 'string', type: 'string' },
+      { name: '_totalSupply', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "Approval",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "event",
+    type: 'error',
     inputs: [
-      { name: "from", type: "address", indexed: true },
-      { name: "to", type: "address", indexed: true },
-      { name: "value", type: "uint256", indexed: false },
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'allowance', internalType: 'uint256', type: 'uint256' },
+      { name: 'needed', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "Transfer",
+    name: 'ERC20InsufficientAllowance',
   },
   {
-    type: "function",
+    type: 'error',
     inputs: [
-      { name: "owner", type: "address" },
-      { name: "spender", type: "address" },
+      { name: 'sender', internalType: 'address', type: 'address' },
+      { name: 'balance', internalType: 'uint256', type: 'uint256' },
+      { name: 'needed', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "allowance",
-    outputs: [{ type: "uint256" }],
-    stateMutability: "view",
+    name: 'ERC20InsufficientBalance',
   },
   {
-    type: "function",
+    type: 'error',
+    inputs: [{ name: 'approver', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidApprover',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'receiver', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidReceiver',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'sender', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidSender',
+  },
+  {
+    type: 'error',
+    inputs: [{ name: 'spender', internalType: 'address', type: 'address' }],
+    name: 'ERC20InvalidSpender',
+  },
+  {
+    type: 'event',
+    anonymous: false,
     inputs: [
-      { name: "spender", type: "address" },
-      { name: "amount", type: "uint256" },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'spender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
     ],
-    name: "approve",
-    outputs: [{ type: "bool" }],
-    stateMutability: "nonpayable",
+    name: 'Approval',
   },
   {
-    type: "function",
-    inputs: [{ name: "account", type: "address" }],
-    name: "balanceOf",
-    outputs: [{ type: "uint256" }],
-    stateMutability: "view",
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'Transfer',
   },
   {
-    type: "function",
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'spender', internalType: 'address', type: 'address' },
+    ],
+    name: 'allowance',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'spender', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'approve',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'balanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [],
-    name: "decimals",
-    outputs: [{ type: "uint8" }],
-    stateMutability: "view",
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [],
-    name: "name",
-    outputs: [{ type: "string" }],
-    stateMutability: "view",
+    name: 'name',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [],
-    name: "symbol",
-    outputs: [{ type: "string" }],
-    stateMutability: "view",
+    name: 'symbol',
+    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [],
-    name: "totalSupply",
-    outputs: [{ type: "uint256" }],
-    stateMutability: "view",
+    name: 'totalSupply',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [
-      { name: "recipient", type: "address" },
-      { name: "amount", type: "uint256" },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "transfer",
-    outputs: [{ type: "bool" }],
-    stateMutability: "nonpayable",
+    name: 'transfer',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [
-      { name: "sender", type: "address" },
-      { name: "recipient", type: "address" },
-      { name: "amount", type: "uint256" },
+      { name: 'from', internalType: 'address', type: 'address' },
+      { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'value', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "transferFrom",
-    outputs: [{ type: "bool" }],
-    stateMutability: "nonpayable",
+    name: 'transferFrom',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'nonpayable',
   },
-] as const;
+] as const
 
-export const domTokenAddress =
-  "0x227D72bC2E698C397507b5d4f5464a70FF68a85e" as const;
+/**
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ */
+export const domTokenAddress = {
+  80001: '0x227D72bC2E698C397507b5d4f5464a70FF68a85e',
+} as const
 
+/**
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ */
 export const domTokenConfig = {
   address: domTokenAddress,
   abi: domTokenAbi,
-} as const;
+} as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Staking
@@ -123,187 +202,187 @@ export const domTokenConfig = {
  */
 export const stakingAbi = [
   {
-    type: "constructor",
+    type: 'constructor',
     inputs: [
-      { name: "_domTokenAddress", internalType: "address", type: "address" },
-      { name: "_minimumStakeAmount", internalType: "uint256", type: "uint256" },
+      { name: '_domTokenAddress', internalType: 'address', type: 'address' },
+      { name: '_minimumStakeAmount', internalType: 'uint256', type: 'uint256' },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "error",
-    inputs: [{ name: "owner", internalType: "address", type: "address" }],
-    name: "OwnableInvalidOwner",
+    type: 'error',
+    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
+    name: 'OwnableInvalidOwner',
   },
   {
-    type: "error",
-    inputs: [{ name: "account", internalType: "address", type: "address" }],
-    name: "OwnableUnauthorizedAccount",
+    type: 'error',
+    inputs: [{ name: 'account', internalType: 'address', type: 'address' }],
+    name: 'OwnableUnauthorizedAccount',
   },
-  { type: "error", inputs: [], name: "Staking__InsufficientStakeAmount" },
+  { type: 'error', inputs: [], name: 'Staking__InsufficientStakeAmount' },
   {
-    type: "error",
-    inputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    name: "Staking__InsufficientTokenBalance",
+    type: 'error',
+    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: 'Staking__InsufficientTokenBalance',
   },
   {
-    type: "error",
+    type: 'error',
     inputs: [],
-    name: "Staking__StakeAmountCannotBeLessThanMinimumAfterWithdrawal",
+    name: 'Staking__StakeAmountCannotBeLessThanMinimumAfterWithdrawal',
   },
-  { type: "error", inputs: [], name: "Staking__TransferFailed" },
-  { type: "error", inputs: [], name: "Staking__UserNotStaked" },
-  { type: "error", inputs: [], name: "Staking__UserSuspended" },
+  { type: 'error', inputs: [], name: 'Staking__TransferFailed' },
+  { type: 'error', inputs: [], name: 'Staking__UserNotStaked' },
+  { type: 'error', inputs: [], name: 'Staking__UserSuspended' },
   {
-    type: "error",
+    type: 'error',
     inputs: [],
-    name: "Staking__WithdrawAmountCannotBeGreaterThanStaked",
+    name: 'Staking__WithdrawAmountCannotBeGreaterThanStaked',
   },
-  { type: "error", inputs: [], name: "Staking__ZeroAmount" },
+  { type: 'error', inputs: [], name: 'Staking__ZeroAmount' },
   {
-    type: "event",
+    type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: "previousOwner",
-        internalType: "address",
-        type: "address",
+        name: 'previousOwner',
+        internalType: 'address',
+        type: 'address',
         indexed: true,
       },
       {
-        name: "newOwner",
-        internalType: "address",
-        type: "address",
+        name: 'newOwner',
+        internalType: 'address',
+        type: 'address',
         indexed: true,
       },
     ],
-    name: "OwnershipTransferred",
+    name: 'OwnershipTransferred',
   },
   {
-    type: "event",
+    type: 'event',
     anonymous: false,
     inputs: [
-      { name: "user", internalType: "address", type: "address", indexed: true },
+      { name: 'user', internalType: 'address', type: 'address', indexed: true },
       {
-        name: "amount",
-        internalType: "uint256",
-        type: "uint256",
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
         indexed: false,
       },
     ],
-    name: "TokensStaked",
+    name: 'TokensStaked',
   },
   {
-    type: "event",
+    type: 'event',
     anonymous: false,
     inputs: [
       {
-        name: "user",
-        internalType: "address",
-        type: "address",
+        name: 'user',
+        internalType: 'address',
+        type: 'address',
         indexed: false,
       },
     ],
-    name: "TokensUnstakedFully",
+    name: 'TokensUnstakedFully',
   },
   {
-    type: "event",
+    type: 'event',
     anonymous: false,
     inputs: [
-      { name: "user", internalType: "address", type: "address", indexed: true },
+      { name: 'user', internalType: 'address', type: 'address', indexed: true },
       {
-        name: "amount",
-        internalType: "uint256",
-        type: "uint256",
+        name: 'amount',
+        internalType: 'uint256',
+        type: 'uint256',
         indexed: false,
       },
     ],
-    name: "TokensUnstakedPartially",
+    name: 'TokensUnstakedPartially',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [],
-    name: "getMinimumStakeAmount",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    stateMutability: "view",
+    name: 'getMinimumStakeAmount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
-    inputs: [{ name: "_user", internalType: "address", type: "address" }],
-    name: "getUserStakedAmount",
-    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-    stateMutability: "view",
+    type: 'function',
+    inputs: [{ name: '_user', internalType: 'address', type: 'address' }],
+    name: 'getUserStakedAmount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
-    inputs: [{ name: "_user", internalType: "address", type: "address" }],
-    name: "isSuspendedUser",
-    outputs: [{ name: "", internalType: "bool", type: "bool" }],
-    stateMutability: "view",
+    type: 'function',
+    inputs: [{ name: '_user', internalType: 'address', type: 'address' }],
+    name: 'isSuspendedUser',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [],
-    name: "owner",
-    outputs: [{ name: "", internalType: "address", type: "address" }],
-    stateMutability: "view",
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [],
-    name: "renounceOwnership",
+    name: 'renounceOwnership',
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "function",
-    inputs: [{ name: "amount", internalType: "uint256", type: "uint256" }],
-    name: "setMinimumStakeAmount",
+    type: 'function',
+    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
+    name: 'setMinimumStakeAmount',
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [
-      { name: "_amountToStake", internalType: "uint256", type: "uint256" },
+      { name: '_amountToStake', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "stake",
+    name: 'stake',
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [
-      { name: "_userToSuspend", internalType: "address", type: "address" },
+      { name: '_userToSuspend', internalType: 'address', type: 'address' },
     ],
-    name: "suspendUser",
+    name: 'suspendUser',
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "function",
-    inputs: [{ name: "newOwner", internalType: "address", type: "address" }],
-    name: "transferOwnership",
+    type: 'function',
+    inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
+    name: 'transferOwnership',
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
   {
-    type: "function",
+    type: 'function',
     inputs: [
-      { name: "_amountToWithdraw", internalType: "uint256", type: "uint256" },
+      { name: '_amountToWithdraw', internalType: 'uint256', type: 'uint256' },
     ],
-    name: "withdraw",
+    name: 'withdraw',
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: 'nonpayable',
   },
-] as const;
+] as const
 
 /**
  * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
  */
 export const stakingAddress = {
-  80001: "0x80D89B0b4e720dEBe2d44Af074519eE194151e87",
-} as const;
+  80001: '0x80D89B0b4e720dEBe2d44Af074519eE194151e87',
+} as const
 
 /**
  * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
@@ -311,7 +390,7 @@ export const stakingAddress = {
 export const stakingConfig = {
   address: stakingAddress,
   abi: stakingAbi,
-} as const;
+} as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
@@ -319,167 +398,203 @@ export const stakingConfig = {
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomToken = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-});
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"allowance"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomTokenAllowance = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "allowance",
-});
+  functionName: 'allowance',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"balanceOf"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomTokenBalanceOf = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "balanceOf",
-});
+  functionName: 'balanceOf',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"decimals"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomTokenDecimals = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "decimals",
-});
+  functionName: 'decimals',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"name"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomTokenName = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "name",
-});
+  functionName: 'name',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"symbol"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomTokenSymbol = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "symbol",
-});
+  functionName: 'symbol',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"totalSupply"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useReadDomTokenTotalSupply = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "totalSupply",
-});
+  functionName: 'totalSupply',
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWriteDomToken = /*#__PURE__*/ createUseWriteContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-});
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"approve"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWriteDomTokenApprove = /*#__PURE__*/ createUseWriteContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "approve",
-});
+  functionName: 'approve',
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transfer"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWriteDomTokenTransfer = /*#__PURE__*/ createUseWriteContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-  functionName: "transfer",
-});
+  functionName: 'transfer',
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transferFrom"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWriteDomTokenTransferFrom =
   /*#__PURE__*/ createUseWriteContract({
     abi: domTokenAbi,
     address: domTokenAddress,
-    functionName: "transferFrom",
-  });
+    functionName: 'transferFrom',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useSimulateDomToken = /*#__PURE__*/ createUseSimulateContract({
   abi: domTokenAbi,
   address: domTokenAddress,
-});
+})
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"approve"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useSimulateDomTokenApprove =
   /*#__PURE__*/ createUseSimulateContract({
     abi: domTokenAbi,
     address: domTokenAddress,
-    functionName: "approve",
-  });
+    functionName: 'approve',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transfer"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useSimulateDomTokenTransfer =
   /*#__PURE__*/ createUseSimulateContract({
     abi: domTokenAbi,
     address: domTokenAddress,
-    functionName: "transfer",
-  });
+    functionName: 'transfer',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transferFrom"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useSimulateDomTokenTransferFrom =
   /*#__PURE__*/ createUseSimulateContract({
     abi: domTokenAbi,
     address: domTokenAddress,
-    functionName: "transferFrom",
-  });
+    functionName: 'transferFrom',
+  })
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link domTokenAbi}__
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWatchDomTokenEvent = /*#__PURE__*/ createUseWatchContractEvent({
   abi: domTokenAbi,
   address: domTokenAddress,
-});
+})
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link domTokenAbi}__ and `eventName` set to `"Approval"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWatchDomTokenApprovalEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: domTokenAbi,
     address: domTokenAddress,
-    eventName: "Approval",
-  });
+    eventName: 'Approval',
+  })
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link domTokenAbi}__ and `eventName` set to `"Transfer"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
  */
 export const useWatchDomTokenTransferEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: domTokenAbi,
     address: domTokenAddress,
-    eventName: "Transfer",
-  });
+    eventName: 'Transfer',
+  })
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__
@@ -489,7 +604,7 @@ export const useWatchDomTokenTransferEvent =
 export const useReadStaking = /*#__PURE__*/ createUseReadContract({
   abi: stakingAbi,
   address: stakingAddress,
-});
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"getMinimumStakeAmount"`
@@ -500,8 +615,8 @@ export const useReadStakingGetMinimumStakeAmount =
   /*#__PURE__*/ createUseReadContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "getMinimumStakeAmount",
-  });
+    functionName: 'getMinimumStakeAmount',
+  })
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"getUserStakedAmount"`
@@ -512,8 +627,8 @@ export const useReadStakingGetUserStakedAmount =
   /*#__PURE__*/ createUseReadContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "getUserStakedAmount",
-  });
+    functionName: 'getUserStakedAmount',
+  })
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"isSuspendedUser"`
@@ -524,8 +639,8 @@ export const useReadStakingIsSuspendedUser =
   /*#__PURE__*/ createUseReadContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "isSuspendedUser",
-  });
+    functionName: 'isSuspendedUser',
+  })
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"owner"`
@@ -535,8 +650,8 @@ export const useReadStakingIsSuspendedUser =
 export const useReadStakingOwner = /*#__PURE__*/ createUseReadContract({
   abi: stakingAbi,
   address: stakingAddress,
-  functionName: "owner",
-});
+  functionName: 'owner',
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__
@@ -546,7 +661,7 @@ export const useReadStakingOwner = /*#__PURE__*/ createUseReadContract({
 export const useWriteStaking = /*#__PURE__*/ createUseWriteContract({
   abi: stakingAbi,
   address: stakingAddress,
-});
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"renounceOwnership"`
@@ -557,8 +672,8 @@ export const useWriteStakingRenounceOwnership =
   /*#__PURE__*/ createUseWriteContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "renounceOwnership",
-  });
+    functionName: 'renounceOwnership',
+  })
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"setMinimumStakeAmount"`
@@ -569,8 +684,8 @@ export const useWriteStakingSetMinimumStakeAmount =
   /*#__PURE__*/ createUseWriteContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "setMinimumStakeAmount",
-  });
+    functionName: 'setMinimumStakeAmount',
+  })
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"stake"`
@@ -580,8 +695,8 @@ export const useWriteStakingSetMinimumStakeAmount =
 export const useWriteStakingStake = /*#__PURE__*/ createUseWriteContract({
   abi: stakingAbi,
   address: stakingAddress,
-  functionName: "stake",
-});
+  functionName: 'stake',
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"suspendUser"`
@@ -591,8 +706,8 @@ export const useWriteStakingStake = /*#__PURE__*/ createUseWriteContract({
 export const useWriteStakingSuspendUser = /*#__PURE__*/ createUseWriteContract({
   abi: stakingAbi,
   address: stakingAddress,
-  functionName: "suspendUser",
-});
+  functionName: 'suspendUser',
+})
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"transferOwnership"`
@@ -603,8 +718,8 @@ export const useWriteStakingTransferOwnership =
   /*#__PURE__*/ createUseWriteContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "transferOwnership",
-  });
+    functionName: 'transferOwnership',
+  })
 
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"withdraw"`
@@ -614,8 +729,8 @@ export const useWriteStakingTransferOwnership =
 export const useWriteStakingWithdraw = /*#__PURE__*/ createUseWriteContract({
   abi: stakingAbi,
   address: stakingAddress,
-  functionName: "withdraw",
-});
+  functionName: 'withdraw',
+})
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__
@@ -625,7 +740,7 @@ export const useWriteStakingWithdraw = /*#__PURE__*/ createUseWriteContract({
 export const useSimulateStaking = /*#__PURE__*/ createUseSimulateContract({
   abi: stakingAbi,
   address: stakingAddress,
-});
+})
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"renounceOwnership"`
@@ -636,8 +751,8 @@ export const useSimulateStakingRenounceOwnership =
   /*#__PURE__*/ createUseSimulateContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "renounceOwnership",
-  });
+    functionName: 'renounceOwnership',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"setMinimumStakeAmount"`
@@ -648,8 +763,8 @@ export const useSimulateStakingSetMinimumStakeAmount =
   /*#__PURE__*/ createUseSimulateContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "setMinimumStakeAmount",
-  });
+    functionName: 'setMinimumStakeAmount',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"stake"`
@@ -659,8 +774,8 @@ export const useSimulateStakingSetMinimumStakeAmount =
 export const useSimulateStakingStake = /*#__PURE__*/ createUseSimulateContract({
   abi: stakingAbi,
   address: stakingAddress,
-  functionName: "stake",
-});
+  functionName: 'stake',
+})
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"suspendUser"`
@@ -671,8 +786,8 @@ export const useSimulateStakingSuspendUser =
   /*#__PURE__*/ createUseSimulateContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "suspendUser",
-  });
+    functionName: 'suspendUser',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"transferOwnership"`
@@ -683,8 +798,8 @@ export const useSimulateStakingTransferOwnership =
   /*#__PURE__*/ createUseSimulateContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "transferOwnership",
-  });
+    functionName: 'transferOwnership',
+  })
 
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"withdraw"`
@@ -695,8 +810,8 @@ export const useSimulateStakingWithdraw =
   /*#__PURE__*/ createUseSimulateContract({
     abi: stakingAbi,
     address: stakingAddress,
-    functionName: "withdraw",
-  });
+    functionName: 'withdraw',
+  })
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__
@@ -706,7 +821,7 @@ export const useSimulateStakingWithdraw =
 export const useWatchStakingEvent = /*#__PURE__*/ createUseWatchContractEvent({
   abi: stakingAbi,
   address: stakingAddress,
-});
+})
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"OwnershipTransferred"`
@@ -717,8 +832,8 @@ export const useWatchStakingOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: stakingAbi,
     address: stakingAddress,
-    eventName: "OwnershipTransferred",
-  });
+    eventName: 'OwnershipTransferred',
+  })
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"TokensStaked"`
@@ -729,8 +844,8 @@ export const useWatchStakingTokensStakedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: stakingAbi,
     address: stakingAddress,
-    eventName: "TokensStaked",
-  });
+    eventName: 'TokensStaked',
+  })
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"TokensUnstakedFully"`
@@ -741,8 +856,8 @@ export const useWatchStakingTokensUnstakedFullyEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: stakingAbi,
     address: stakingAddress,
-    eventName: "TokensUnstakedFully",
-  });
+    eventName: 'TokensUnstakedFully',
+  })
 
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"TokensUnstakedPartially"`
@@ -753,5 +868,5 @@ export const useWatchStakingTokensUnstakedPartiallyEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: stakingAbi,
     address: stakingAddress,
-    eventName: "TokensUnstakedPartially",
-  });
+    eventName: 'TokensUnstakedPartially',
+  })

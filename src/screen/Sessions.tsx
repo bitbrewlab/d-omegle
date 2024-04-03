@@ -11,7 +11,6 @@ import Navbar from "../component/navbar";
 import { useDisconnect } from "wagmi";
 
 import Logo from "../assets/eng_logo.svg";
-import { useReadDomTokenName } from "../generated";
 
 export default function Peer2() {
   // ___For Production___
@@ -34,8 +33,6 @@ export default function Peer2() {
   let peerConnection = useRef<RTCPeerConnection>();
   let sessionObject = useRef<any>(null);
 
-  let Timer: string | number | NodeJS.Timeout | undefined;
-
   const { disconnect } = useDisconnect();
 
   const detectKeyDownEvent = (e: any) => {
@@ -45,11 +42,9 @@ export default function Peer2() {
     }
   };
 
-  const startTimer = async () => {
-    Timer = setTimeout(onSessionEnd, 120000);
-  };
-
-  const { data } = useReadDomTokenName();
+  // ==============================
+  // ===== Contract Functions =====
+  // ==============================
 
   useEffect(() => {
     document.addEventListener("keydown", detectKeyDownEvent, true);
@@ -70,14 +65,11 @@ export default function Peer2() {
     return () => {
       peerConnection.current?.close();
       socket.disconnect();
-      console.log("Timer Stoped");
-      clearTimeout(Timer);
     };
   }, [peerConnection.current?.signalingState]);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
     console.log("socket connected");
-    console.log(data);
     sessionObject.current = _socket;
 
     peerConnection.current = new RTCPeerConnection({
@@ -109,8 +101,6 @@ export default function Peer2() {
   };
 
   const onOffer = async (data: any) => {
-    startTimer();
-
     const offer = await peerConnection.current!.createOffer({
       iceRestart: true,
     });
@@ -127,8 +117,6 @@ export default function Peer2() {
   };
 
   const onAnswer = async (data: any) => {
-    startTimer();
-
     peerConnection.current?.setRemoteDescription(data.offer);
 
     const answer = await peerConnection.current?.createAnswer();
@@ -173,8 +161,6 @@ export default function Peer2() {
   const onSessionEnd = () => {
     remoteStream.getTracks().forEach((track) => track.stop());
     remoteStream.getTracks().forEach((track) => (track.enabled = false));
-    console.log("Timer Stoped");
-    clearTimeout(Timer);
     peerConnection.current?.close();
     socket.disconnect();
     socket.connect();
@@ -182,8 +168,6 @@ export default function Peer2() {
 
   const exitToPlatform = async () => {
     socket.emit("changeSession", sessionObject.current);
-    console.log("Timer Stoped");
-    clearTimeout(Timer);
 
     if (localStream) {
       await localStream.getTracks().forEach((track) => track.stop());

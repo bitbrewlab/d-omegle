@@ -1,8 +1,10 @@
 import { useAccount } from "wagmi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { useEffect } from "react";
 import CoustomAvatar from "../component/coustom_avatar";
+import { userEntry } from "../redux/features/domegleDataSlice";
+import { polygonMumbai } from "viem/chains";
 
 export default function Navbar() {
   const navigation = [
@@ -12,11 +14,26 @@ export default function Navbar() {
 
   const account = useAccount();
   const userState = useSelector((state: RootState) => {
-    return state.domegleData; // Add 'return' statement to return the state
+    return state.domegleData;
   });
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.log(userState); // Access 'wallet' property only if 'userState' exists
+    /**
+     * @dev here we update our redux state if user connect with wallet or NFT
+     * @pending need to implement condition here, coz while user enter as a guest it will automatically update the state
+     *
+     */
+    if (account.address !== undefined) {
+      dispatch(
+        userEntry({
+          type: "walletConnect",
+          address: account.address,
+          chainId: polygonMumbai.id,
+        })
+      );
+    }
   }, []);
 
   return (
@@ -50,19 +67,13 @@ export default function Navbar() {
           <CoustomAvatar
             address={account.address ?? userState.wallet?.address ?? ""}
           />
-          {account.address ? (
-            <div className="md:flex gap-3 items-center hidden">
-              <p>
-                {account.address?.slice(0, 8) +
-                  "..." +
-                  account.address?.slice(-4)}
-              </p>
-            </div>
-          ) : (
-            <div className="md:flex gap-3 items-center hidden">
-              <p>{userState.wallet?.address}</p>
-            </div>
-          )}
+          <div className="md:flex gap-3 items-center hidden">
+            <p>
+              {userState.wallet?.address?.slice(0, 8).toString() +
+                "..." +
+                userState.wallet?.address?.slice(-4).toString()}
+            </p>
+          </div>
         </div>
       </div>
     </nav>

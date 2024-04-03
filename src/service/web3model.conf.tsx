@@ -1,5 +1,5 @@
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { polygonZkEvmTestnet, polygonZkEvm } from "wagmi/chains";
+import { polygonMumbai } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   RainbowKitProvider,
@@ -44,12 +44,11 @@ const connector = connectorsForWallets(
   }
 );
 
-const chains = [polygonZkEvm, polygonZkEvmTestnet] as const;
+const chains = [polygonMumbai] as const;
 export const config = createConfig({
   chains,
   transports: {
-    [polygonZkEvm.id]: http(),
-    [polygonZkEvmTestnet.id]: http(),
+    [polygonMumbai.id]: http(),
   },
   connectors: connector,
 });
@@ -60,7 +59,7 @@ export function Web3ModalProvider({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           modalSize="compact"
-          initialChain={polygonZkEvmTestnet}
+          initialChain={polygonMumbai}
           coolMode
         >
           {children}
