@@ -10,7 +10,7 @@ import {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const domTokenAbi = [
   {
@@ -179,14 +179,14 @@ export const domTokenAbi = [
 ] as const
 
 /**
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const domTokenAddress = {
-  80001: '0x227D72bC2E698C397507b5d4f5464a70FF68a85e',
+  80001: '0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE',
 } as const
 
 /**
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const domTokenConfig = {
   address: domTokenAddress,
@@ -194,18 +194,18 @@ export const domTokenConfig = {
 } as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Staking
+// TokenBaseAccess
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const stakingAbi = [
+export const tokenBaseAccessAbi = [
   {
     type: 'constructor',
     inputs: [
-      { name: '_domTokenAddress', internalType: 'address', type: 'address' },
-      { name: '_minimumStakeAmount', internalType: 'uint256', type: 'uint256' },
+      { name: '_token', internalType: 'address', type: 'address' },
+      { name: '_stakeAmount', internalType: 'uint256', type: 'uint256' },
     ],
     stateMutability: 'nonpayable',
   },
@@ -220,25 +220,23 @@ export const stakingAbi = [
     name: 'OwnableUnauthorizedAccount',
   },
   { type: 'error', inputs: [], name: 'Staking__InsufficientStakeAmount' },
-  {
-    type: 'error',
-    inputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    name: 'Staking__InsufficientTokenBalance',
-  },
-  {
-    type: 'error',
-    inputs: [],
-    name: 'Staking__StakeAmountCannotBeLessThanMinimumAfterWithdrawal',
-  },
   { type: 'error', inputs: [], name: 'Staking__TransferFailed' },
-  { type: 'error', inputs: [], name: 'Staking__UserNotStaked' },
-  { type: 'error', inputs: [], name: 'Staking__UserSuspended' },
+  { type: 'error', inputs: [], name: 'Staking__UserNotStakeAmout' },
+  { type: 'error', inputs: [], name: 'Staking__UserPermamentlyRevoked' },
   {
-    type: 'error',
-    inputs: [],
-    name: 'Staking__WithdrawAmountCannotBeGreaterThanStaked',
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'user', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'accessGranted',
+        internalType: 'bool',
+        type: 'bool',
+        indexed: false,
+      },
+    ],
+    name: 'AccessGranted',
   },
-  { type: 'error', inputs: [], name: 'Staking__ZeroAmount' },
   {
     type: 'event',
     anonymous: false,
@@ -270,20 +268,7 @@ export const stakingAbi = [
         indexed: false,
       },
     ],
-    name: 'TokensStaked',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'user',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-    ],
-    name: 'TokensUnstakedFully',
+    name: 'Staked',
   },
   {
     type: 'event',
@@ -297,27 +282,20 @@ export const stakingAbi = [
         indexed: false,
       },
     ],
-    name: 'TokensUnstakedPartially',
+    name: 'Withdrawn',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: '_user', internalType: 'address', type: 'address' }],
+    name: 'checkUserStackAmount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [],
-    name: 'getMinimumStakeAmount',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: '_user', internalType: 'address', type: 'address' }],
-    name: 'getUserStakedAmount',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    inputs: [{ name: '_user', internalType: 'address', type: 'address' }],
-    name: 'isSuspendedUser',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    name: 'domToken',
+    outputs: [{ name: '', internalType: 'contract DomToken', type: 'address' }],
     stateMutability: 'view',
   },
   {
@@ -336,26 +314,24 @@ export const stakingAbi = [
   },
   {
     type: 'function',
-    inputs: [{ name: 'amount', internalType: 'uint256', type: 'uint256' }],
-    name: 'setMinimumStakeAmount',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    inputs: [],
+    name: 'stakeAmount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: 'view',
   },
   {
     type: 'function',
     inputs: [
       { name: '_amountToStake', internalType: 'uint256', type: 'uint256' },
     ],
-    name: 'stake',
+    name: 'stakeTokens',
     outputs: [],
     stateMutability: 'nonpayable',
   },
   {
     type: 'function',
-    inputs: [
-      { name: '_userToSuspend', internalType: 'address', type: 'address' },
-    ],
-    name: 'suspendUser',
+    inputs: [],
+    name: 'suspandUser',
     outputs: [],
     stateMutability: 'nonpayable',
   },
@@ -368,28 +344,26 @@ export const stakingAbi = [
   },
   {
     type: 'function',
-    inputs: [
-      { name: '_amountToWithdraw', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'withdraw',
+    inputs: [],
+    name: 'withdrawStake',
     outputs: [],
     stateMutability: 'nonpayable',
   },
 ] as const
 
 /**
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const stakingAddress = {
-  80001: '0x80D89B0b4e720dEBe2d44Af074519eE194151e87',
+export const tokenBaseAccessAddress = {
+  80001: '0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157',
 } as const
 
 /**
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const stakingConfig = {
-  address: stakingAddress,
-  abi: stakingAbi,
+export const tokenBaseAccessConfig = {
+  address: tokenBaseAccessAddress,
+  abi: tokenBaseAccessAbi,
 } as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -399,7 +373,7 @@ export const stakingConfig = {
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomToken = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -409,7 +383,7 @@ export const useReadDomToken = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"allowance"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomTokenAllowance = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -420,7 +394,7 @@ export const useReadDomTokenAllowance = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"balanceOf"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomTokenBalanceOf = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -431,7 +405,7 @@ export const useReadDomTokenBalanceOf = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"decimals"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomTokenDecimals = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -442,7 +416,7 @@ export const useReadDomTokenDecimals = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"name"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomTokenName = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -453,7 +427,7 @@ export const useReadDomTokenName = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"symbol"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomTokenSymbol = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -464,7 +438,7 @@ export const useReadDomTokenSymbol = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"totalSupply"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useReadDomTokenTotalSupply = /*#__PURE__*/ createUseReadContract({
   abi: domTokenAbi,
@@ -475,7 +449,7 @@ export const useReadDomTokenTotalSupply = /*#__PURE__*/ createUseReadContract({
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWriteDomToken = /*#__PURE__*/ createUseWriteContract({
   abi: domTokenAbi,
@@ -485,7 +459,7 @@ export const useWriteDomToken = /*#__PURE__*/ createUseWriteContract({
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"approve"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWriteDomTokenApprove = /*#__PURE__*/ createUseWriteContract({
   abi: domTokenAbi,
@@ -496,7 +470,7 @@ export const useWriteDomTokenApprove = /*#__PURE__*/ createUseWriteContract({
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transfer"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWriteDomTokenTransfer = /*#__PURE__*/ createUseWriteContract({
   abi: domTokenAbi,
@@ -507,7 +481,7 @@ export const useWriteDomTokenTransfer = /*#__PURE__*/ createUseWriteContract({
 /**
  * Wraps __{@link useWriteContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transferFrom"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWriteDomTokenTransferFrom =
   /*#__PURE__*/ createUseWriteContract({
@@ -519,7 +493,7 @@ export const useWriteDomTokenTransferFrom =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useSimulateDomToken = /*#__PURE__*/ createUseSimulateContract({
   abi: domTokenAbi,
@@ -529,7 +503,7 @@ export const useSimulateDomToken = /*#__PURE__*/ createUseSimulateContract({
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"approve"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useSimulateDomTokenApprove =
   /*#__PURE__*/ createUseSimulateContract({
@@ -541,7 +515,7 @@ export const useSimulateDomTokenApprove =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transfer"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useSimulateDomTokenTransfer =
   /*#__PURE__*/ createUseSimulateContract({
@@ -553,7 +527,7 @@ export const useSimulateDomTokenTransfer =
 /**
  * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link domTokenAbi}__ and `functionName` set to `"transferFrom"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useSimulateDomTokenTransferFrom =
   /*#__PURE__*/ createUseSimulateContract({
@@ -565,7 +539,7 @@ export const useSimulateDomTokenTransferFrom =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link domTokenAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWatchDomTokenEvent = /*#__PURE__*/ createUseWatchContractEvent({
   abi: domTokenAbi,
@@ -575,7 +549,7 @@ export const useWatchDomTokenEvent = /*#__PURE__*/ createUseWatchContractEvent({
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link domTokenAbi}__ and `eventName` set to `"Approval"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWatchDomTokenApprovalEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -587,7 +561,7 @@ export const useWatchDomTokenApprovalEvent =
 /**
  * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link domTokenAbi}__ and `eventName` set to `"Transfer"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x227D72bC2E698C397507b5d4f5464a70FF68a85e)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE)
  */
 export const useWatchDomTokenTransferEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
@@ -597,276 +571,258 @@ export const useWatchDomTokenTransferEvent =
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useReadStaking = /*#__PURE__*/ createUseReadContract({
-  abi: stakingAbi,
-  address: stakingAddress,
+export const useReadTokenBaseAccess = /*#__PURE__*/ createUseReadContract({
+  abi: tokenBaseAccessAbi,
+  address: tokenBaseAccessAddress,
 })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"getMinimumStakeAmount"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"checkUserStackAmount"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useReadStakingGetMinimumStakeAmount =
+export const useReadTokenBaseAccessCheckUserStackAmount =
   /*#__PURE__*/ createUseReadContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'getMinimumStakeAmount',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'checkUserStackAmount',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"getUserStakedAmount"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"domToken"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useReadStakingGetUserStakedAmount =
+export const useReadTokenBaseAccessDomToken =
   /*#__PURE__*/ createUseReadContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'getUserStakedAmount',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'domToken',
   })
 
 /**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"isSuspendedUser"`
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"owner"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useReadStakingIsSuspendedUser =
-  /*#__PURE__*/ createUseReadContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'isSuspendedUser',
-  })
-
-/**
- * Wraps __{@link useReadContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"owner"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useReadStakingOwner = /*#__PURE__*/ createUseReadContract({
-  abi: stakingAbi,
-  address: stakingAddress,
+export const useReadTokenBaseAccessOwner = /*#__PURE__*/ createUseReadContract({
+  abi: tokenBaseAccessAbi,
+  address: tokenBaseAccessAddress,
   functionName: 'owner',
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"stakeAmount"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWriteStaking = /*#__PURE__*/ createUseWriteContract({
-  abi: stakingAbi,
-  address: stakingAddress,
+export const useReadTokenBaseAccessStakeAmount =
+  /*#__PURE__*/ createUseReadContract({
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'stakeAmount',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
+ */
+export const useWriteTokenBaseAccess = /*#__PURE__*/ createUseWriteContract({
+  abi: tokenBaseAccessAbi,
+  address: tokenBaseAccessAddress,
 })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"renounceOwnership"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"renounceOwnership"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWriteStakingRenounceOwnership =
+export const useWriteTokenBaseAccessRenounceOwnership =
   /*#__PURE__*/ createUseWriteContract({
-    abi: stakingAbi,
-    address: stakingAddress,
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
     functionName: 'renounceOwnership',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"setMinimumStakeAmount"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"stakeTokens"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWriteStakingSetMinimumStakeAmount =
+export const useWriteTokenBaseAccessStakeTokens =
   /*#__PURE__*/ createUseWriteContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'setMinimumStakeAmount',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'stakeTokens',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"stake"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"suspandUser"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWriteStakingStake = /*#__PURE__*/ createUseWriteContract({
-  abi: stakingAbi,
-  address: stakingAddress,
-  functionName: 'stake',
-})
-
-/**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"suspendUser"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useWriteStakingSuspendUser = /*#__PURE__*/ createUseWriteContract({
-  abi: stakingAbi,
-  address: stakingAddress,
-  functionName: 'suspendUser',
-})
-
-/**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"transferOwnership"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useWriteStakingTransferOwnership =
+export const useWriteTokenBaseAccessSuspandUser =
   /*#__PURE__*/ createUseWriteContract({
-    abi: stakingAbi,
-    address: stakingAddress,
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'suspandUser',
+  })
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"transferOwnership"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
+ */
+export const useWriteTokenBaseAccessTransferOwnership =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
     functionName: 'transferOwnership',
   })
 
 /**
- * Wraps __{@link useWriteContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"withdraw"`
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"withdrawStake"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWriteStakingWithdraw = /*#__PURE__*/ createUseWriteContract({
-  abi: stakingAbi,
-  address: stakingAddress,
-  functionName: 'withdraw',
-})
+export const useWriteTokenBaseAccessWithdrawStake =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'withdrawStake',
+  })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useSimulateStaking = /*#__PURE__*/ createUseSimulateContract({
-  abi: stakingAbi,
-  address: stakingAddress,
-})
-
-/**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"renounceOwnership"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useSimulateStakingRenounceOwnership =
+export const useSimulateTokenBaseAccess =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: stakingAbi,
-    address: stakingAddress,
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+  })
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"renounceOwnership"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
+ */
+export const useSimulateTokenBaseAccessRenounceOwnership =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
     functionName: 'renounceOwnership',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"setMinimumStakeAmount"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"stakeTokens"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useSimulateStakingSetMinimumStakeAmount =
+export const useSimulateTokenBaseAccessStakeTokens =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'setMinimumStakeAmount',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'stakeTokens',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"stake"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"suspandUser"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useSimulateStakingStake = /*#__PURE__*/ createUseSimulateContract({
-  abi: stakingAbi,
-  address: stakingAddress,
-  functionName: 'stake',
-})
-
-/**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"suspendUser"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useSimulateStakingSuspendUser =
+export const useSimulateTokenBaseAccessSuspandUser =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'suspendUser',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'suspandUser',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"transferOwnership"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"transferOwnership"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useSimulateStakingTransferOwnership =
+export const useSimulateTokenBaseAccessTransferOwnership =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: stakingAbi,
-    address: stakingAddress,
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
     functionName: 'transferOwnership',
   })
 
 /**
- * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link stakingAbi}__ and `functionName` set to `"withdraw"`
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `functionName` set to `"withdrawStake"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useSimulateStakingWithdraw =
+export const useSimulateTokenBaseAccessWithdrawStake =
   /*#__PURE__*/ createUseSimulateContract({
-    abi: stakingAbi,
-    address: stakingAddress,
-    functionName: 'withdraw',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    functionName: 'withdrawStake',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link tokenBaseAccessAbi}__
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWatchStakingEvent = /*#__PURE__*/ createUseWatchContractEvent({
-  abi: stakingAbi,
-  address: stakingAddress,
-})
-
-/**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"OwnershipTransferred"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useWatchStakingOwnershipTransferredEvent =
+export const useWatchTokenBaseAccessEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: stakingAbi,
-    address: stakingAddress,
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `eventName` set to `"AccessGranted"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
+ */
+export const useWatchTokenBaseAccessAccessGrantedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    eventName: 'AccessGranted',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `eventName` set to `"OwnershipTransferred"`
+ *
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
+ */
+export const useWatchTokenBaseAccessOwnershipTransferredEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
     eventName: 'OwnershipTransferred',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"TokensStaked"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `eventName` set to `"Staked"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWatchStakingTokensStakedEvent =
+export const useWatchTokenBaseAccessStakedEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: stakingAbi,
-    address: stakingAddress,
-    eventName: 'TokensStaked',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    eventName: 'Staked',
   })
 
 /**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"TokensUnstakedFully"`
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link tokenBaseAccessAbi}__ and `eventName` set to `"Withdrawn"`
  *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
+ * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157)
  */
-export const useWatchStakingTokensUnstakedFullyEvent =
+export const useWatchTokenBaseAccessWithdrawnEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
-    abi: stakingAbi,
-    address: stakingAddress,
-    eventName: 'TokensUnstakedFully',
-  })
-
-/**
- * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link stakingAbi}__ and `eventName` set to `"TokensUnstakedPartially"`
- *
- * [__View Contract on Polygon Mumbai Polygon Scan__](https://mumbai.polygonscan.com/address/0x80D89B0b4e720dEBe2d44Af074519eE194151e87)
- */
-export const useWatchStakingTokensUnstakedPartiallyEvent =
-  /*#__PURE__*/ createUseWatchContractEvent({
-    abi: stakingAbi,
-    address: stakingAddress,
-    eventName: 'TokensUnstakedPartially',
+    abi: tokenBaseAccessAbi,
+    address: tokenBaseAccessAddress,
+    eventName: 'Withdrawn',
   })

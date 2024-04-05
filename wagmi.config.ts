@@ -11,12 +11,12 @@ export default defineConfig(() => ({
       chainId: polygonMumbai.id,
       contracts: [
         {
-          name: "Staking",
-          address: "0x80D89B0b4e720dEBe2d44Af074519eE194151e87",
+          name: "TokenBaseAccess",
+          address: "0x0bf7c6E3aF75ed61Aa0eE527fc40C56A07F83157",
         },
         {
           name: "DomToken",
-          address: "0x227D72bC2E698C397507b5d4f5464a70FF68a85e",
+          address: "0xA98a95eaec726A78b8Cc4cCD61A9Eaebd725E3BE",
         },
       ],
     }),

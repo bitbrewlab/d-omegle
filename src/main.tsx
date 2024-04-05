@@ -3,7 +3,7 @@ import "./index.css";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import React from "react";
+// import React from "react";
 import App from "./App.tsx";
 import Home from "./screen/Home.tsx";
 import NotFound from "./screen/NotFound.tsx";
@@ -26,9 +26,9 @@ const Router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Web3ModalProvider children={<RouterProvider router={Router} />} />
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <Web3ModalProvider children={<RouterProvider router={Router} />} />
+  </Provider>
+  // </React.StrictMode>
 );

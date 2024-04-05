@@ -8,9 +8,12 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../component/navbar";
-import { useDisconnect } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 
 import Logo from "../assets/eng_logo.svg";
+import { checkStake, runQuery } from "../service/thegraph";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export default function Peer2() {
   // ___For Production___
@@ -41,11 +44,20 @@ export default function Peer2() {
       onSessionEnd();
     }
   };
+  const useState = useSelector((state: RootState) => state.domegleData);
+  const account = useAccount();
 
-  // ==============================
-  // ===== Contract Functions =====
-  // ==============================
-
+  const tempCheckFunction = async () => {
+    console.log(useState);
+    if (useState.authenticationType === "walletConnect") {
+      const checkStakeQuery = checkStake(account.address as string);
+      console.log(checkStakeQuery);
+      const response = await runQuery(checkStakeQuery);
+      console.log("api calling: ", response.data.accessGranteds[0]);
+      // return response;
+    }
+    console.log("free user");
+  };
   useEffect(() => {
     document.addEventListener("keydown", detectKeyDownEvent, true);
 
@@ -69,6 +81,7 @@ export default function Peer2() {
   }, [peerConnection.current?.signalingState]);
 
   const onConnected = async (_socket: { localUserSocketID: string }) => {
+    tempCheckFunction();
     console.log("socket connected");
     sessionObject.current = _socket;
 
