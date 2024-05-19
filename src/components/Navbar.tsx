@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 function Navbar() {
   const dispatch = useDispatch();
   return (
-    <nav className="flex justify-between items-center px-20 py-5 border-b bg-white">
-      <h1 className="text-3xl font-extrabold">Domegle</h1>
+    <nav className="flex justify-between items-center px-10 py-5 bg-[#f2f2f2]">
+      <h1 className="text-2xl font-extrabold">
+        :D<span className="font-medium pl-1">omegle</span>
+      </h1>
 
-      <ul className="flex items-center gap-10">
+      <ul className="flex items-center gap-10 hidden">
         <li className="hover:font-bold duration-300 hover:text-red-500">
           <Link to="/">Report</Link>
         </li>
@@ -21,7 +23,7 @@ function Navbar() {
       </ul>
       <button
         onClick={() => dispatch(disconnect())}
-        className="bg-red-500 text-white border border-black py-1 px-5 rounded-full"
+        className="bg-white duration-200 hover:bg-red-500 hover:text-white border border-black py-1 px-5 rounded-full "
       >
         Disconnect
       </button>

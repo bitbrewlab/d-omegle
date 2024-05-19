@@ -13,7 +13,7 @@ function VideoScreen({
       autoPlay
       muted={muted}
       playsInline
-      className="rounded-2xl object-cover w-full h-96 shadow-lg"
+      className="rounded-2xl object-cover w-full h-96 shadow-lg border border-black bg-white"
     />
   );
 }

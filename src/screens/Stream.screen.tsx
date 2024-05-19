@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../state-managment/store";
 import usePeerConnection from "../utils/iceServers";
 import socket from "../hooks/useSocket";
+import useCreateOfferAndSetAnswer from "../hooks/useCreateOfferAndSetAnswer";
+import useSetOfferAndCreateAnswer from "../hooks/useSetOfferAndCreateAnswer";
 
 /**
  * Entry point for the Stream screen
@@ -23,13 +25,22 @@ function StreamScreen() {
   const peerConnection = usePeerConnection();
   const userState = useSelector((state: RootState) => state.auth);
 
+  useCreateOfferAndSetAnswer({ peerConnection });
+  useSetOfferAndCreateAnswer({ peerConnection });
+
   useEffect(() => {
     document.addEventListener("keydown", detectKeyDownEvent, true);
     socket.connect();
 
+    console.log(socket.id);
+
     socket.emit("adminUser", {
       address: userState.walletAddress,
     });
+
+    socket.on("IceCandidateRecived", (candidate) =>
+      peerConnection.addIceCandidate(candidate)
+    );
 
     return () => {
       peerConnection.close();
@@ -38,7 +49,7 @@ function StreamScreen() {
   }, []);
 
   return (
-    <div className="h-screen px-20">
+    <div className="h-screen px-10 bg-[#f2f2f2]">
       <VideoStream peerConnection={peerConnection} />
 
       {userState.enableSessionTime && (
